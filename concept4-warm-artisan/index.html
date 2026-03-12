@@ -217,6 +217,28 @@
             padding: 60px 20px;
         }
 
+        .hero-bg-image {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+        }
+
+        .hero-bg-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: saturate(1.1) brightness(0.95);
+        }
+
+        .hero-bg-image::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(ellipse 60% 50% at 50% 55%, rgba(212, 168, 67, 0.2) 0%, transparent 70%),
+                linear-gradient(180deg, rgba(245, 239, 230, 0.85) 0%, rgba(250, 243, 232, 0.8) 40%, rgba(240, 230, 214, 0.88) 100%);
+        }
+
         /* Warm glow at center */
         .hero::before {
             content: '';
@@ -399,6 +421,18 @@
             font-weight: 500;
         }
 
+        .baker-portrait {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            object-fit: cover;
+            display: block;
+            margin: 0 auto 1.5rem;
+            box-shadow: 0 4px 20px var(--shadow-warm);
+            border: 3px solid rgba(212, 168, 67, 0.2);
+            filter: saturate(1.1) brightness(0.95);
+        }
+
         .recipe-card p {
             font-size: 1rem;
             line-height: 2;
@@ -486,7 +520,15 @@
             transform: scale(1.05);
         }
 
-        /* Bread gradient placeholders — warm bread-like tones */
+        /* Bread images — warm treatment */
+        .bread-img-inner img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: saturate(1.1) brightness(0.95);
+        }
+
+        /* Fallback gradients for slow connections */
         .bread-img-1 .bread-img-inner {
             background: linear-gradient(135deg, #d4a843, #c49035, #e8c878);
         }
@@ -549,6 +591,33 @@
         .process {
             background:
                 linear-gradient(180deg, var(--linen) 0%, #f0e6d6 50%, var(--cream) 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .process-bg-image {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+        }
+
+        .process-bg-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: saturate(1.1) brightness(0.95);
+        }
+
+        .process-bg-image::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(245, 239, 230, 0.92) 0%, rgba(240, 230, 214, 0.88) 50%, rgba(250, 243, 232, 0.92) 100%);
+        }
+
+        .process .container {
+            position: relative;
+            z-index: 2;
         }
 
         .process-timeline {
@@ -862,6 +931,11 @@
      HERO
 ============================================================ -->
 <section class="hero">
+    <!-- Hero background image with warm overlay -->
+    <div class="hero-bg-image">
+        <img src="https://images.unsplash.com/photo-1517433670267-08bbd4be890f?w=1200&h=800&fit=crop&q=80" alt="Warm bakery display" loading="lazy">
+    </div>
+
     <!-- Floating wheat SVG illustrations -->
     <svg class="wheat-float" width="120" height="200" viewBox="0 0 120 200" fill="none" style="--rot: -15deg;">
         <path d="M60 200 C60 200 60 20 60 10" stroke="#3d2b1f" stroke-width="2"/>
@@ -920,6 +994,7 @@
             <svg class="wavy-divider" viewBox="0 0 120 12" fill="none">
                 <path d="M0 6 Q15 0 30 6 T60 6 T90 6 T120 6" stroke="#b86f4c" stroke-width="1.5" fill="none" opacity="0.4"/>
             </svg>
+            <img class="baker-portrait" src="https://images.unsplash.com/photo-1600565193348-f74bd3c7ccdf?w=600&q=80" alt="김영수 명장 - Master Baker" loading="lazy">
             <p>
                 1991년, 작은 동네 빵집에서 시작된 이야기입니다. 김영수 명장은 새벽 4시에 일어나 반죽을 시작하는 것으로 하루를 열었습니다. 밀가루와 물, 소금, 그리고 시간이 만들어내는 마법을 35년간 지켜왔습니다.
             </p>
@@ -963,7 +1038,9 @@
             <!-- Bread 1 -->
             <div class="bread-card fade-up">
                 <div class="bread-img bread-img-1">
-                    <div class="bread-img-inner"></div>
+                    <div class="bread-img-inner">
+                        <img src="https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=400&h=300&fit=crop&q=80" alt="크루아상 클래식" loading="lazy">
+                    </div>
                     <span class="bread-number">01</span>
                 </div>
                 <div class="bread-info">
@@ -976,7 +1053,9 @@
             <!-- Bread 2 -->
             <div class="bread-card fade-up">
                 <div class="bread-img bread-img-2">
-                    <div class="bread-img-inner"></div>
+                    <div class="bread-img-inner">
+                        <img src="https://images.unsplash.com/photo-1568471173242-461f0a730452?w=400&h=300&fit=crop&q=80" alt="바게트 트라디시옹" loading="lazy">
+                    </div>
                     <span class="bread-number">02</span>
                 </div>
                 <div class="bread-info">
@@ -989,7 +1068,9 @@
             <!-- Bread 3 -->
             <div class="bread-card fade-up">
                 <div class="bread-img bread-img-3">
-                    <div class="bread-img-inner"></div>
+                    <div class="bread-img-inner">
+                        <img src="https://images.unsplash.com/photo-1608198093002-ad4e005484ec?w=400&h=300&fit=crop&q=80" alt="브리오슈 도레" loading="lazy">
+                    </div>
                     <span class="bread-number">03</span>
                 </div>
                 <div class="bread-info">
@@ -1002,7 +1083,9 @@
             <!-- Bread 4 -->
             <div class="bread-card fade-up">
                 <div class="bread-img bread-img-4">
-                    <div class="bread-img-inner"></div>
+                    <div class="bread-img-inner">
+                        <img src="https://images.unsplash.com/photo-1586444248902-2f64eddc13df?w=400&h=300&fit=crop&q=80" alt="깜빠뉴" loading="lazy">
+                    </div>
                     <span class="bread-number">04</span>
                 </div>
                 <div class="bread-info">
@@ -1015,7 +1098,9 @@
             <!-- Bread 5 -->
             <div class="bread-card fade-up">
                 <div class="bread-img bread-img-5">
-                    <div class="bread-img-inner"></div>
+                    <div class="bread-img-inner">
+                        <img src="https://images.unsplash.com/photo-1509440159596-0249088772ff?w=400&h=300&fit=crop&q=80" alt="호밀 사워도우" loading="lazy">
+                    </div>
                     <span class="bread-number">05</span>
                 </div>
                 <div class="bread-info">
@@ -1028,7 +1113,9 @@
             <!-- Bread 6 -->
             <div class="bread-card fade-up">
                 <div class="bread-img bread-img-6">
-                    <div class="bread-img-inner"></div>
+                    <div class="bread-img-inner">
+                        <img src="https://images.unsplash.com/photo-1549931319-a545dcf3bc73?w=400&h=300&fit=crop&q=80" alt="명장 식빵" loading="lazy">
+                    </div>
                     <span class="bread-number">06</span>
                 </div>
                 <div class="bread-info">
@@ -1045,6 +1132,10 @@
      PROCESS
 ============================================================ -->
 <section class="process" id="process">
+    <!-- Process section background image -->
+    <div class="process-bg-image">
+        <img src="https://images.unsplash.com/photo-1568254183919-78a4f43a2877?w=1200&h=600&fit=crop&q=80" alt="Bakery workshop" loading="lazy">
+    </div>
     <div class="container">
         <h2 class="section-title fade-up">The Process</h2>
         <p class="section-subtitle fade-up">빵이 만들어지는 과정</p>

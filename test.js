@@ -23,10 +23,13 @@ console.log('\n📁 파일 존재 확인');
 
 const expectedFiles = [
   'index.html',
-  'concept1-art-deco/index.html',
   'concept2-japanese-minimal/index.html',
-  'concept3-editorial/index.html',
   'concept4-warm-artisan/index.html',
+];
+
+const deletedFiles = [
+  'concept1-art-deco/index.html',
+  'concept3-editorial/index.html',
   'concept5-modern-korean/index.html',
 ];
 
@@ -35,22 +38,27 @@ for (const file of expectedFiles) {
   assert(fs.existsSync(fullPath), `${file} 존재`);
 }
 
+for (const file of deletedFiles) {
+  const fullPath = path.join(__dirname, file);
+  assert(!fs.existsSync(fullPath), `${file} 삭제됨`);
+}
+
 // --- 2. 톱 페이지 링크 검증 ---
 console.log('\n🔗 톱 페이지 링크 검증');
 
 const topHtml = fs.readFileSync(path.join(__dirname, 'index.html'), 'utf-8');
 
-for (const file of expectedFiles.slice(1)) {
-  assert(topHtml.includes(file), `톱 페이지에 ${file} 링크 존재`);
-}
-
+assert(topHtml.includes('concept2-japanese-minimal/index.html'), '톱 페이지에 와비사비 링크');
+assert(topHtml.includes('concept4-warm-artisan/index.html'), '톱 페이지에 따뜻한 장인 링크');
+assert(!topHtml.includes('concept1-art-deco'), '톱 페이지에서 아르데코 제거됨');
+assert(!topHtml.includes('concept3-editorial'), '톱 페이지에서 에디토리얼 제거됨');
+assert(!topHtml.includes('concept5-modern-korean'), '톱 페이지에서 모던코리안 제거됨');
 assert(topHtml.includes('명장시대'), '톱 페이지에 브랜드명 포함');
 assert(topHtml.includes('lang="ko"'), '톱 페이지 한국어 lang 속성');
 
 // --- 3. 각 컨셉 페이지 필수 콘텐츠 검증 ---
 console.log('\n📄 각 컨셉 페이지 콘텐츠 검증');
 
-// 정확한 문자열 매칭
 const requiredExact = [
   '명장시대',
   '김영수',
@@ -61,18 +69,14 @@ const requiredExact = [
   '../index.html',
 ];
 
-// 패턴 매칭 (여러 형식 허용)
 const requiredPatterns = [
   { name: '가격 표시 (₩ 또는 &won;)', test: (h) => h.includes('₩') || h.includes('&won;') || h.includes('&#8361;') },
   { name: '영업시간 (08:00~21:00)', test: (h) => h.includes('08:00') && h.includes('21:00') },
 ];
 
 const conceptDirs = [
-  'concept1-art-deco',
   'concept2-japanese-minimal',
-  'concept3-editorial',
   'concept4-warm-artisan',
-  'concept5-modern-korean',
 ];
 
 for (const dir of conceptDirs) {
@@ -110,6 +114,15 @@ console.log('\n📱 반응형 디자인 검증');
 for (const dir of conceptDirs) {
   const html = fs.readFileSync(path.join(__dirname, dir, 'index.html'), 'utf-8');
   assert(html.includes('@media'), `${dir}: 미디어 쿼리 포함`);
+}
+
+// --- 6. 이미지 검증 ---
+console.log('\n🖼️  이미지 검증');
+
+for (const dir of conceptDirs) {
+  const html = fs.readFileSync(path.join(__dirname, dir, 'index.html'), 'utf-8');
+  assert(html.includes('images.unsplash.com'), `${dir}: Unsplash 이미지 포함`);
+  assert((html.match(/loading="lazy"/g) || []).length >= 3, `${dir}: lazy loading 적용`);
 }
 
 // --- 결과 출력 ---

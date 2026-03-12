@@ -11,14 +11,15 @@
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
         :root {
-            --cream: #f5efe6;
-            --espresso: #1a0f0a;
+            --cream: #faf3e8;
+            --warm-brown: #3d2b1f;
             --gold: #c9a96e;
             --warm-gray: #8a7e74;
+            --linen: #f5efe6;
         }
 
         body {
-            background: var(--espresso);
+            background: var(--warm-brown);
             color: var(--cream);
             font-family: 'Noto Serif KR', serif;
             min-height: 100vh;
@@ -126,20 +127,20 @@
             color: var(--warm-gray);
         }
 
-        /* Concept Grid */
+        /* Concept Grid — 2 cards side by side */
         .concepts {
-            max-width: 1200px;
+            max-width: 960px;
             margin: 0 auto;
             padding: 0 24px 100px;
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-            gap: 24px;
+            grid-template-columns: 1fr 1fr;
+            gap: 32px;
         }
 
         .concept-card {
             position: relative;
             border: 1px solid rgba(201, 169, 110, 0.15);
-            border-radius: 2px;
+            border-radius: 4px;
             overflow: hidden;
             cursor: pointer;
             transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
@@ -161,12 +162,8 @@
             box-shadow: 0 20px 60px rgba(0,0,0,0.4);
         }
 
-        .concept-card:hover .card-preview {
-            transform: scale(1.05);
-        }
-
-        .concept-card:hover .card-number {
-            color: var(--gold);
+        .concept-card:hover .card-preview img {
+            transform: scale(1.08);
         }
 
         .concept-card:hover .card-arrow {
@@ -175,144 +172,23 @@
         }
 
         .card-preview {
-            height: 260px;
-            transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+            height: 300px;
             position: relative;
             overflow: hidden;
         }
 
-        /* Concept-specific preview backgrounds */
-        .concept-1 .card-preview {
-            background: linear-gradient(135deg, #1a0f0a 0%, #2a1f15 50%, #1a0f0a 100%);
-        }
-        .concept-1 .card-preview::before {
-            content: '';
-            position: absolute;
-            inset: 20px;
-            border: 1px solid rgba(201, 169, 110, 0.3);
-            background: repeating-linear-gradient(
-                45deg,
-                transparent,
-                transparent 20px,
-                rgba(201, 169, 110, 0.05) 20px,
-                rgba(201, 169, 110, 0.05) 21px
-            );
-        }
-        .concept-1 .card-preview::after {
-            content: '◆';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 3rem;
-            color: var(--gold);
-            opacity: 0.4;
+        .card-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
         }
 
-        .concept-2 .card-preview {
-            background: linear-gradient(180deg, #f5f0e8 0%, #e8e0d4 100%);
-        }
-        .concept-2 .card-preview::before {
-            content: '';
-            position: absolute;
-            bottom: 40px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 1px;
-            height: 80px;
-            background: #8a7e74;
-            opacity: 0.4;
-        }
-        .concept-2 .card-preview::after {
-            content: '○';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -60%);
-            font-size: 4rem;
-            color: #5a4f44;
-            opacity: 0.2;
-        }
-
-        .concept-3 .card-preview {
-            background: #0a0a0a;
-        }
-        .concept-3 .card-preview::before {
-            content: 'Mm';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 8rem;
-            font-weight: 600;
-            color: #fff;
-            opacity: 0.08;
-            letter-spacing: -0.05em;
-        }
-        .concept-3 .card-preview::after {
-            content: '';
-            position: absolute;
-            top: 30px;
-            right: 30px;
-            width: 40px;
-            height: 40px;
-            border: 2px solid #fff;
-            border-radius: 50%;
-            opacity: 0.15;
-        }
-
-        .concept-4 .card-preview {
-            background: linear-gradient(160deg, #3d2b1f 0%, #5a3d2b 50%, #3d2b1f 100%);
-        }
-        .concept-4 .card-preview::before {
+        .card-preview::after {
             content: '';
             position: absolute;
             inset: 0;
-            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 30 Q15 25 30 30 Q45 35 60 30' stroke='%23c9a96e' stroke-width='0.5' fill='none' opacity='0.1'/%3E%3C/svg%3E");
-            background-size: 60px 60px;
-        }
-        .concept-4 .card-preview::after {
-            content: '🌾';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 3rem;
-            opacity: 0.5;
-        }
-
-        .concept-5 .card-preview {
-            background: linear-gradient(135deg, #1a2332 0%, #0f1922 100%);
-        }
-        .concept-5 .card-preview::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            background: conic-gradient(
-                #c94040 0deg 72deg,
-                #2e7d4f 72deg 144deg,
-                #c9a96e 144deg 216deg,
-                #2563a0 216deg 288deg,
-                #8b4f8b 288deg 360deg
-            );
-            opacity: 0.25;
-        }
-        .concept-5 .card-preview::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background: #1a2332;
+            background: linear-gradient(to bottom, transparent 50%, rgba(61, 43, 31, 0.7));
         }
 
         .card-body {
@@ -323,13 +199,12 @@
             font-family: 'Cormorant Garamond', serif;
             font-size: 0.75rem;
             letter-spacing: 0.3em;
-            color: var(--warm-gray);
+            color: var(--gold);
             margin-bottom: 10px;
-            transition: color 0.3s ease;
         }
 
         .card-title {
-            font-size: 1.3rem;
+            font-size: 1.4rem;
             font-weight: 700;
             margin-bottom: 6px;
             letter-spacing: 0.03em;
@@ -412,7 +287,7 @@
                 padding: 60px 16px 30px;
             }
             .card-preview {
-                height: 200px;
+                height: 220px;
             }
         }
     </style>
@@ -421,7 +296,7 @@
     <header class="header">
         <p class="brand-sub">Prototype Showcase</p>
         <h1 class="brand-name" id="brandName"></h1>
-        <p class="tagline">명장이 만든 품위 있는 빵, 다섯 가지 시선으로</p>
+        <p class="tagline">명장이 만든 품위 있는 빵, 두 가지 시선으로</p>
     </header>
 
     <div class="divider">
@@ -433,36 +308,19 @@
     <section class="intro">
         <p>
             같은 브랜드, 다른 감성.<br>
-            다섯 가지 디자인 컨셉으로 명장시대의<br>
+            두 가지 디자인 컨셉으로 명장시대의<br>
             웹사이트를 프로토타이핑했습니다.<br>
             각 컨셉을 클릭하여 비교해 보세요.
         </p>
     </section>
 
     <main class="concepts">
-        <a href="concept1-art-deco/index.html" class="concept-card concept-1">
-            <div class="card-preview"></div>
-            <div class="card-body">
-                <p class="card-number">CONCEPT 01</p>
-                <h2 class="card-title">아르데코 럭셔리</h2>
-                <p class="card-subtitle">Art Deco Luxury</p>
-                <p class="card-desc">1920년대 파리 살롱에서 영감을 받은 기하학적 금박 패턴과 극적인 타이포그래피. 명장의 격을 아르데코의 우아함으로 표현합니다.</p>
-                <div class="card-tags">
-                    <span class="tag">금박 패턴</span>
-                    <span class="tag">기하학</span>
-                    <span class="tag">극적 연출</span>
-                </div>
-                <div class="card-footer">
-                    <span class="card-cta">View Concept</span>
-                    <span class="card-arrow">→</span>
-                </div>
+        <a href="concept2-japanese-minimal/index.html" class="concept-card">
+            <div class="card-preview">
+                <img src="https://images.unsplash.com/photo-1589367920969-ab8e050bbb04?w=600&h=400&fit=crop&q=80" alt="사워도우 빵" loading="lazy">
             </div>
-        </a>
-
-        <a href="concept2-japanese-minimal/index.html" class="concept-card concept-2">
-            <div class="card-preview"></div>
             <div class="card-body">
-                <p class="card-number">CONCEPT 02</p>
+                <p class="card-number">CONCEPT A</p>
                 <h2 class="card-title">와비사비 미니멀</h2>
                 <p class="card-subtitle">Japanese Minimalism</p>
                 <p class="card-desc">여백의 미와 자연스러운 질감. 도자기 위에 놓인 빵처럼, 불완전함 속의 아름다움을 담은 절제된 디자인입니다.</p>
@@ -478,29 +336,12 @@
             </div>
         </a>
 
-        <a href="concept3-editorial/index.html" class="concept-card concept-3">
-            <div class="card-preview"></div>
-            <div class="card-body">
-                <p class="card-number">CONCEPT 03</p>
-                <h2 class="card-title">에디토리얼 매거진</h2>
-                <p class="card-subtitle">Editorial Magazine</p>
-                <p class="card-desc">하이엔드 매거진의 대담한 타이포그래피와 에디토리얼 레이아웃. 빵을 예술 작품처럼 소개하는 감각적 경험입니다.</p>
-                <div class="card-tags">
-                    <span class="tag">타이포그래피</span>
-                    <span class="tag">대담한 레이아웃</span>
-                    <span class="tag">흑백 대비</span>
-                </div>
-                <div class="card-footer">
-                    <span class="card-cta">View Concept</span>
-                    <span class="card-arrow">→</span>
-                </div>
+        <a href="concept4-warm-artisan/index.html" class="concept-card">
+            <div class="card-preview">
+                <img src="https://images.unsplash.com/photo-1517433670267-08bbd4be890f?w=600&h=400&fit=crop&q=80" alt="베이커리 진열대" loading="lazy">
             </div>
-        </a>
-
-        <a href="concept4-warm-artisan/index.html" class="concept-card concept-4">
-            <div class="card-preview"></div>
             <div class="card-body">
-                <p class="card-number">CONCEPT 04</p>
+                <p class="card-number">CONCEPT B</p>
                 <h2 class="card-title">따뜻한 장인</h2>
                 <p class="card-subtitle">Warm Artisan</p>
                 <p class="card-desc">나무결과 밀가루의 질감, 오븐의 온기. 손으로 빚은 정성이 느껴지는 따뜻하고 소박한 장인의 공방을 표현합니다.</p>
@@ -508,25 +349,6 @@
                     <span class="tag">나무결 텍스처</span>
                     <span class="tag">핸드메이드</span>
                     <span class="tag">따뜻한 톤</span>
-                </div>
-                <div class="card-footer">
-                    <span class="card-cta">View Concept</span>
-                    <span class="card-arrow">→</span>
-                </div>
-            </div>
-        </a>
-
-        <a href="concept5-modern-korean/index.html" class="concept-card concept-5">
-            <div class="card-preview"></div>
-            <div class="card-body">
-                <p class="card-number">CONCEPT 05</p>
-                <h2 class="card-title">모던 코리안</h2>
-                <p class="card-subtitle">Modern Korean</p>
-                <p class="card-desc">단청의 오방색과 한국 전통 문양을 현대적으로 재해석. 한국의 명장이라는 정체성을 강렬하게 드러내는 디자인입니다.</p>
-                <div class="card-tags">
-                    <span class="tag">오방색</span>
-                    <span class="tag">전통 문양</span>
-                    <span class="tag">현대적 재해석</span>
                 </div>
                 <div class="card-footer">
                     <span class="card-cta">View Concept</span>
@@ -554,14 +376,14 @@
         // Intersection Observer for cards
         const cards = document.querySelectorAll('.concept-card');
         const observer = new IntersectionObserver((entries) => {
-            entries.forEach((entry, index) => {
+            entries.forEach((entry) => {
                 if (entry.isIntersecting) {
                     const card = entry.target;
-                    const delay = Array.from(cards).indexOf(card) * 120;
+                    const delay = Array.from(cards).indexOf(card) * 150;
                     setTimeout(() => {
                         card.classList.add('visible');
-                        card.style.transition = `all 0.7s cubic-bezier(0.23, 1, 0.32, 1) ${delay}ms`;
-                    }, 100);
+                        card.style.transition = `all 0.7s cubic-bezier(0.23, 1, 0.32, 1)`;
+                    }, 100 + delay);
                     observer.unobserve(card);
                 }
             });
