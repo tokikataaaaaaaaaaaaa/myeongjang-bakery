@@ -145,9 +145,8 @@ assert(bricolageHtml.includes('position: fixed') || bricolageHtml.includes('posi
 // Smooth scroll
 assert(bricolageHtml.includes('scroll-behavior: smooth') || bricolageHtml.includes('scroll-behavior:smooth'), 'Bricolage: 부드러운 스크롤');
 
-// Team profiles
-assert(bricolageHtml.includes('이서연'), 'Bricolage: 이서연 프로필 포함');
-assert(bricolageHtml.includes('박준혁'), 'Bricolage: 박준혁 프로필 포함');
+// Team profile (master baker only)
+assert(bricolageHtml.includes('김영수'), 'Bricolage: 김영수 명장 프로필 포함');
 
 // Sections: About, Family, Menu, Information
 assert(bricolageHtml.includes('FAMILY'), 'Bricolage: FAMILY 섹션');
