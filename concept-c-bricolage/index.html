@@ -39,6 +39,122 @@
             overflow-x: hidden;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
+            cursor: none;
+        }
+
+        /* ==================== */
+        /* SCROLL PROGRESS BAR  */
+        /* ==================== */
+        .scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 2px;
+            background: var(--gold);
+            box-shadow: 0 0 8px rgba(184, 150, 62, 0.4);
+            z-index: 1100;
+            transition: none;
+            pointer-events: none;
+        }
+
+        /* ==================== */
+        /* CUSTOM CURSOR        */
+        /* ==================== */
+        .custom-cursor {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 10px;
+            height: 10px;
+            background: var(--gold);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 10000;
+            opacity: 0.8;
+            transition: width 0.4s cubic-bezier(0.25, 0.1, 0.25, 1),
+                        height 0.4s cubic-bezier(0.25, 0.1, 0.25, 1),
+                        opacity 0.4s cubic-bezier(0.25, 0.1, 0.25, 1),
+                        background 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
+            transform: translate(-50%, -50%);
+            mix-blend-mode: exclusion;
+        }
+
+        .custom-cursor.hovering {
+            width: 24px;
+            height: 24px;
+            opacity: 0.5;
+            background: var(--warm-white);
+        }
+
+        /* ==================== */
+        /* FLOATING ATMOSPHERE  */
+        /* ==================== */
+        .atmosphere {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .atmo-circle {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(184, 150, 62, 0.05) 0%, transparent 70%);
+            animation: atmoDrift linear infinite;
+        }
+
+        .atmo-circle:nth-child(1) {
+            width: 400px;
+            height: 400px;
+            top: 10%;
+            left: -5%;
+            animation-duration: 45s;
+        }
+
+        .atmo-circle:nth-child(2) {
+            width: 300px;
+            height: 300px;
+            top: 50%;
+            right: -8%;
+            animation-duration: 55s;
+            animation-delay: -15s;
+        }
+
+        .atmo-circle:nth-child(3) {
+            width: 250px;
+            height: 250px;
+            top: 75%;
+            left: 30%;
+            animation-duration: 60s;
+            animation-delay: -30s;
+        }
+
+        @keyframes atmoDrift {
+            0% {
+                transform: translate(0, 0) scale(1);
+                opacity: 0.03;
+            }
+            25% {
+                transform: translate(80px, -60px) scale(1.1);
+                opacity: 0.05;
+            }
+            50% {
+                transform: translate(40px, -120px) scale(0.95);
+                opacity: 0.03;
+            }
+            75% {
+                transform: translate(-40px, -60px) scale(1.05);
+                opacity: 0.04;
+            }
+            100% {
+                transform: translate(0, 0) scale(1);
+                opacity: 0.03;
+            }
         }
 
         /* ==================== */
@@ -80,11 +196,63 @@
         /* ==================== */
         .reveal {
             opacity: 0;
-            transition: opacity 1.4s cubic-bezier(0.25, 0.1, 0.25, 1);
+            transform: translateY(40px);
+            transition: opacity 1.4s cubic-bezier(0.25, 0.1, 0.25, 1),
+                        transform 1.4s cubic-bezier(0.25, 0.1, 0.25, 1);
         }
 
         .reveal.visible {
             opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Clip-path reveal for section titles */
+        .clip-reveal {
+            clip-path: inset(100% 0 0 0);
+            transition: clip-path 1.2s cubic-bezier(0.77, 0, 0.175, 1);
+        }
+
+        .clip-reveal.visible {
+            clip-path: inset(0 0 0 0);
+        }
+
+        /* Staggered text reveal */
+        .stagger-reveal > * {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s cubic-bezier(0.25, 0.1, 0.25, 1),
+                        transform 0.8s cubic-bezier(0.25, 0.1, 0.25, 1);
+        }
+
+        .stagger-reveal.visible > *:nth-child(1) { transition-delay: 0.1s; }
+        .stagger-reveal.visible > *:nth-child(2) { transition-delay: 0.25s; }
+        .stagger-reveal.visible > *:nth-child(3) { transition-delay: 0.4s; }
+        .stagger-reveal.visible > *:nth-child(4) { transition-delay: 0.55s; }
+        .stagger-reveal.visible > *:nth-child(5) { transition-delay: 0.7s; }
+
+        .stagger-reveal.visible > * {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Image curtain reveal */
+        .curtain-reveal {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .curtain-reveal::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: var(--cream);
+            transform: translateX(0);
+            transition: transform 1.3s cubic-bezier(0.77, 0, 0.175, 1);
+            z-index: 2;
+        }
+
+        .curtain-reveal.revealed::after {
+            transform: translateX(101%);
         }
 
         /* ==================== */
@@ -231,17 +399,20 @@
 
         .hero-image {
             position: absolute;
-            inset: 0;
-            width: 100%;
-            height: 100%;
+            inset: -10%;
+            width: 120%;
+            height: 120%;
             object-fit: cover;
-            transform: scale(1.08);
-            animation: heroZoom 20s ease-out forwards;
+            animation: heroKenBurns 20s cubic-bezier(0.25, 0.1, 0.25, 1) infinite alternate;
+            will-change: transform;
         }
 
-        @keyframes heroZoom {
-            to {
-                transform: scale(1);
+        @keyframes heroKenBurns {
+            0% {
+                transform: scale(1) translate(0, 0);
+            }
+            100% {
+                transform: scale(1.08) translate(-1%, -1%);
             }
         }
 
@@ -263,6 +434,8 @@
             transform: translateX(-50%);
             text-align: center;
             color: #fff;
+            will-change: transform;
+            transition: transform 0.1s linear;
         }
 
         .hero-title {
@@ -291,6 +464,12 @@
             text-align: center;
             color: #fff;
             opacity: 0.5;
+            transition: opacity 0.8s cubic-bezier(0.25, 0.1, 0.25, 1);
+        }
+
+        .scroll-indicator.faded {
+            opacity: 0;
+            pointer-events: none;
         }
 
         .scroll-indicator span {
@@ -300,6 +479,7 @@
             text-transform: uppercase;
             display: block;
             margin-bottom: 0.8rem;
+            animation: scrollTextPulse 2.5s cubic-bezier(0.25, 0.1, 0.25, 1) infinite;
         }
 
         .scroll-indicator::after {
@@ -317,14 +497,21 @@
             50% { opacity: 0.8; transform: scaleY(1); }
         }
 
+        @keyframes scrollTextPulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
         /* ==================== */
         /* ABOUT                */
         /* ==================== */
         .about {
+            position: relative;
             padding: 12rem 2rem 8rem;
             max-width: 720px;
             margin: 0 auto;
             text-align: center;
+            z-index: 1;
         }
 
         .about-subtitle {
@@ -348,6 +535,17 @@
             word-break: keep-all;
         }
 
+        /* Typewriter word styling */
+        .about-text .tw-word {
+            opacity: 0;
+            transition: opacity 0.6s cubic-bezier(0.25, 0.1, 0.25, 1);
+            display: inline;
+        }
+
+        .about-text .tw-word.tw-visible {
+            opacity: 0.75;
+        }
+
         .about-image {
             width: 100%;
             max-width: 640px;
@@ -366,9 +564,11 @@
         /* FAMILY               */
         /* ==================== */
         .family {
+            position: relative;
             padding: 12rem 2rem 8rem;
             max-width: 1100px;
             margin: 0 auto;
+            z-index: 1;
         }
 
         .family-header {
@@ -407,6 +607,32 @@
             aspect-ratio: 3 / 4;
             object-fit: cover;
             display: block;
+            will-change: transform;
+        }
+
+        /* Family slide-in animations */
+        .family-photo-animate {
+            opacity: 0;
+            transform: translateX(-60px);
+            transition: opacity 1.2s cubic-bezier(0.25, 0.1, 0.25, 1),
+                        transform 1.2s cubic-bezier(0.25, 0.1, 0.25, 1);
+        }
+
+        .family-photo-animate.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .family-info-animate {
+            opacity: 0;
+            transform: translateX(60px);
+            transition: opacity 1.2s cubic-bezier(0.25, 0.1, 0.25, 1) 0.2s,
+                        transform 1.2s cubic-bezier(0.25, 0.1, 0.25, 1) 0.2s;
+        }
+
+        .family-info-animate.visible {
+            opacity: 1;
+            transform: translateX(0);
         }
 
         .family-info {
@@ -465,9 +691,11 @@
         /* MENU                 */
         /* ==================== */
         .menu {
+            position: relative;
             padding: 12rem 2rem 8rem;
             max-width: 1000px;
             margin: 0 auto;
+            z-index: 1;
         }
 
         .menu-header {
@@ -483,6 +711,14 @@
 
         .menu-item {
             cursor: default;
+            transition: transform 0.6s cubic-bezier(0.25, 0.1, 0.25, 1),
+                        box-shadow 0.6s cubic-bezier(0.25, 0.1, 0.25, 1);
+            padding-bottom: 1rem;
+        }
+
+        .menu-item:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(42, 31, 23, 0.08);
         }
 
         .menu-item-image {
@@ -501,7 +737,7 @@
         }
 
         .menu-item:hover .menu-item-image img {
-            transform: scale(1.03);
+            transform: scale(1.05);
         }
 
         .menu-item-name-ko {
@@ -509,6 +745,7 @@
             font-weight: 400;
             letter-spacing: 0.04em;
             margin-bottom: 0.15rem;
+            padding: 0 0.5rem;
         }
 
         .menu-item-name-en {
@@ -519,6 +756,7 @@
             text-transform: uppercase;
             color: var(--gray);
             margin-bottom: 0.6rem;
+            padding: 0 0.5rem;
         }
 
         .menu-item-desc {
@@ -527,6 +765,7 @@
             color: var(--gray);
             line-height: 1.7;
             margin-bottom: 0.6rem;
+            padding: 0 0.5rem;
         }
 
         .menu-item-price {
@@ -535,15 +774,27 @@
             font-weight: 400;
             letter-spacing: 0.05em;
             color: var(--gold);
+            padding: 0 0.5rem;
+            opacity: 0;
+            transform: translateX(12px);
+            transition: opacity 0.5s cubic-bezier(0.25, 0.1, 0.25, 1),
+                        transform 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
+        }
+
+        .menu-item:hover .menu-item-price {
+            opacity: 1;
+            transform: translateX(0);
         }
 
         /* ==================== */
         /* INFORMATION          */
         /* ==================== */
         .information {
+            position: relative;
             padding: 12rem 2rem 8rem;
             max-width: 900px;
             margin: 0 auto;
+            z-index: 1;
         }
 
         .information-header {
@@ -634,11 +885,13 @@
         /* FOOTER               */
         /* ==================== */
         .site-footer {
+            position: relative;
             padding: 4rem 2rem;
             border-top: 1px solid var(--border);
             max-width: 1100px;
             margin: 0 auto;
             background: var(--cream);
+            z-index: 1;
         }
 
         .footer-top {
@@ -748,6 +1001,14 @@
         /* RESPONSIVE           */
         /* ==================== */
         @media (max-width: 768px) {
+            body {
+                cursor: auto;
+            }
+
+            .custom-cursor {
+                display: none !important;
+            }
+
             .site-header {
                 padding: 0 1.5rem;
             }
@@ -794,6 +1055,23 @@
                 direction: ltr;
             }
 
+            /* Simplify family animations on mobile */
+            .family-photo-animate {
+                transform: translateY(30px);
+            }
+
+            .family-photo-animate.visible {
+                transform: translateY(0);
+            }
+
+            .family-info-animate {
+                transform: translateY(30px);
+            }
+
+            .family-info-animate.visible {
+                transform: translateY(0);
+            }
+
             .menu {
                 padding: 8rem 1.5rem 5rem;
             }
@@ -801,6 +1079,12 @@
             .menu-grid {
                 grid-template-columns: 1fr;
                 gap: 3rem;
+            }
+
+            /* Show price always on mobile since no hover */
+            .menu-item-price {
+                opacity: 1;
+                transform: translateX(0);
             }
 
             .information {
@@ -826,10 +1110,44 @@
             .footer-legal {
                 justify-content: center;
             }
+
+            /* Reduce atmospheric elements on mobile */
+            .atmo-circle {
+                opacity: 0.02 !important;
+            }
+        }
+
+        /* Disable cursor on touch devices */
+        @media (hover: none) and (pointer: coarse) {
+            body {
+                cursor: auto;
+            }
+
+            .custom-cursor {
+                display: none !important;
+            }
+
+            .menu-item-price {
+                opacity: 1;
+                transform: translateX(0);
+            }
         }
     </style>
 </head>
 <body>
+
+    <!-- SCROLL PROGRESS BAR -->
+    <div class="scroll-progress" id="scrollProgress"></div>
+
+    <!-- CUSTOM CURSOR -->
+    <div class="custom-cursor" id="customCursor"></div>
+
+    <!-- FLOATING ATMOSPHERE -->
+    <div class="atmosphere" aria-hidden="true">
+        <div class="atmo-circle"></div>
+        <div class="atmo-circle"></div>
+        <div class="atmo-circle"></div>
+    </div>
 
     <!-- HEADER -->
     <header class="site-header" id="siteHeader">
@@ -865,21 +1183,21 @@
             class="hero-image"
         >
         <div class="hero-overlay"></div>
-        <div class="hero-content">
+        <div class="hero-content" id="heroContent">
             <h1 class="hero-title">명장시대</h1>
             <p class="hero-since">SINCE 1991</p>
         </div>
-        <div class="scroll-indicator">
+        <div class="scroll-indicator" id="scrollIndicator">
             <span>Scroll</span>
         </div>
     </section>
 
     <!-- ABOUT -->
     <section class="about" id="about">
-        <div class="reveal">
+        <div class="reveal stagger-reveal">
             <p class="section-label">About</p>
-            <h2 class="about-subtitle">The Art of Patient Baking</h2>
-            <p class="about-text">
+            <h2 class="about-subtitle clip-reveal">The Art of Patient Baking</h2>
+            <p class="about-text" id="aboutText">
                 명장시대는 단순한 빵집이 아닙니다.
                 좋은 밀과 깨끗한 물, 그리고 시간이 만들어내는
                 본연의 맛을 지키는 곳입니다.
@@ -889,7 +1207,7 @@
                 빵은 기다림의 예술이라는 것.
             </p>
         </div>
-        <div class="about-image reveal">
+        <div class="about-image curtain-reveal reveal">
             <img
                 src="https://images.unsplash.com/photo-1589367920969-ab8e050bbb04?w=1000&h=600&fit=crop&q=80"
                 alt="사워도우 발효 과정"
@@ -900,22 +1218,22 @@
 
     <!-- FAMILY -->
     <section class="family" id="family">
-        <div class="family-header reveal">
+        <div class="family-header reveal stagger-reveal">
             <p class="section-label">Family</p>
-            <h2 class="section-title-en">FAMILY</h2>
+            <h2 class="section-title-en clip-reveal">FAMILY</h2>
             <p class="section-title-ko">명장시대를 만드는 사람들</p>
         </div>
 
         <!-- Kim Young-su -->
-        <article class="family-member reveal">
-            <div class="family-photo">
+        <article class="family-member">
+            <div class="family-photo curtain-reveal family-photo-animate">
                 <img
                     src="https://images.unsplash.com/photo-1600565193348-f74bd3c7ccdf?w=600&h=800&fit=crop&q=80"
                     alt="김영수 명장"
                     loading="lazy"
                 >
             </div>
-            <div class="family-info">
+            <div class="family-info family-info-animate">
                 <h3 class="family-name-ko">김영수</h3>
                 <p class="family-name-en">Young-su Kim</p>
                 <p class="family-role">Founder & Master Baker</p>
@@ -936,14 +1254,14 @@
 
     <!-- MENU -->
     <section class="menu" id="menu">
-        <div class="menu-header reveal">
+        <div class="menu-header reveal stagger-reveal">
             <p class="section-label">Menu</p>
-            <h2 class="section-title-en">THE BREAD</h2>
+            <h2 class="section-title-en clip-reveal">THE BREAD</h2>
         </div>
 
         <div class="menu-grid">
             <div class="menu-item reveal">
-                <div class="menu-item-image">
+                <div class="menu-item-image curtain-reveal">
                     <img
                         src="https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=600&h=400&fit=crop&q=80"
                         alt="크루아상 클래식"
@@ -957,7 +1275,7 @@
             </div>
 
             <div class="menu-item reveal">
-                <div class="menu-item-image">
+                <div class="menu-item-image curtain-reveal">
                     <img
                         src="https://images.unsplash.com/photo-1568471173242-461f0a730452?w=600&h=400&fit=crop&q=80"
                         alt="바게트 트라디시옹"
@@ -971,7 +1289,7 @@
             </div>
 
             <div class="menu-item reveal">
-                <div class="menu-item-image">
+                <div class="menu-item-image curtain-reveal">
                     <img
                         src="https://images.unsplash.com/photo-1608198093002-ad4e005484ec?w=600&h=400&fit=crop&q=80"
                         alt="브리오슈 도레"
@@ -985,7 +1303,7 @@
             </div>
 
             <div class="menu-item reveal">
-                <div class="menu-item-image">
+                <div class="menu-item-image curtain-reveal">
                     <img
                         src="https://images.unsplash.com/photo-1586444248902-2f64eddc13df?w=600&h=400&fit=crop&q=80"
                         alt="깜빠뉴"
@@ -999,7 +1317,7 @@
             </div>
 
             <div class="menu-item reveal">
-                <div class="menu-item-image">
+                <div class="menu-item-image curtain-reveal">
                     <img
                         src="https://images.unsplash.com/photo-1509440159596-0249088772ff?w=600&h=400&fit=crop&q=80"
                         alt="호밀 사워도우"
@@ -1013,7 +1331,7 @@
             </div>
 
             <div class="menu-item reveal">
-                <div class="menu-item-image">
+                <div class="menu-item-image curtain-reveal">
                     <img
                         src="https://images.unsplash.com/photo-1549931319-a545dcf3bc73?w=600&h=400&fit=crop&q=80"
                         alt="명장 식빵"
@@ -1030,9 +1348,9 @@
 
     <!-- INFORMATION -->
     <section class="information" id="information">
-        <div class="information-header reveal">
+        <div class="information-header reveal stagger-reveal">
             <p class="section-label">Information</p>
-            <h2 class="section-title-en">INFORMATION</h2>
+            <h2 class="section-title-en clip-reveal">INFORMATION</h2>
         </div>
 
         <div class="info-grid reveal">
@@ -1138,8 +1456,84 @@
         });
 
         /* ==================== */
+        /* SCROLL PROGRESS BAR  */
+        /* ==================== */
+        var scrollProgress = document.getElementById('scrollProgress');
+
+        function updateScrollProgress() {
+            var scrollTop = window.scrollY;
+            var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            var progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+            scrollProgress.style.width = progress + '%';
+        }
+
+        /* ==================== */
+        /* HERO PARALLAX        */
+        /* ==================== */
+        var heroContent = document.getElementById('heroContent');
+        var scrollIndicator = document.getElementById('scrollIndicator');
+        var heroSection = document.querySelector('.hero');
+        var scrollIndicatorFaded = false;
+
+        function updateHeroParallax() {
+            var scrollTop = window.scrollY;
+            var heroHeight = heroSection.offsetHeight;
+
+            if (scrollTop < heroHeight) {
+                // Parallax: hero content moves slower than scroll
+                var parallaxOffset = scrollTop * 0.35;
+                heroContent.style.transform = 'translateX(-50%) translateY(-' + parallaxOffset + 'px)';
+            }
+
+            // Fade scroll indicator
+            if (scrollTop > 80 && !scrollIndicatorFaded) {
+                scrollIndicator.classList.add('faded');
+                scrollIndicatorFaded = true;
+            } else if (scrollTop <= 80 && scrollIndicatorFaded) {
+                scrollIndicator.classList.remove('faded');
+                scrollIndicatorFaded = false;
+            }
+        }
+
+        /* ==================== */
+        /* FAMILY PHOTO PARALLAX */
+        /* ==================== */
+        var familyPhotos = document.querySelectorAll('.family-photo img');
+
+        function updateFamilyParallax() {
+            familyPhotos.forEach(function (img) {
+                var rect = img.getBoundingClientRect();
+                var windowHeight = window.innerHeight;
+                if (rect.top < windowHeight && rect.bottom > 0) {
+                    var progress = (windowHeight - rect.top) / (windowHeight + rect.height);
+                    var offset = (progress - 0.5) * 30;
+                    img.style.transform = 'translateY(' + offset + 'px)';
+                }
+            });
+        }
+
+        /* ==================== */
+        /* UNIFIED SCROLL       */
+        /* ==================== */
+        var ticking = false;
+
+        window.addEventListener('scroll', function () {
+            if (!ticking) {
+                requestAnimationFrame(function () {
+                    updateScrollProgress();
+                    updateHeroParallax();
+                    updateFamilyParallax();
+                    ticking = false;
+                });
+                ticking = true;
+            }
+        }, { passive: true });
+
+        /* ==================== */
         /* INTERSECTION OBSERVER */
         /* ==================== */
+
+        // Main reveal observer (fade + translateY)
         var revealElements = document.querySelectorAll('.reveal');
 
         var revealObserver = new IntersectionObserver(function (entries) {
@@ -1157,6 +1551,153 @@
         revealElements.forEach(function (el) {
             revealObserver.observe(el);
         });
+
+        // Clip-path reveal observer
+        var clipElements = document.querySelectorAll('.clip-reveal');
+
+        var clipObserver = new IntersectionObserver(function (entries) {
+            entries.forEach(function (entry) {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    clipObserver.unobserve(entry.target);
+                }
+            });
+        }, {
+            threshold: 0.1,
+            rootMargin: '0px 0px -40px 0px'
+        });
+
+        clipElements.forEach(function (el) {
+            clipObserver.observe(el);
+        });
+
+        // Curtain reveal observer
+        var curtainElements = document.querySelectorAll('.curtain-reveal');
+
+        var curtainObserver = new IntersectionObserver(function (entries) {
+            entries.forEach(function (entry) {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('revealed');
+                    curtainObserver.unobserve(entry.target);
+                }
+            });
+        }, {
+            threshold: 0.15,
+            rootMargin: '0px 0px -40px 0px'
+        });
+
+        curtainElements.forEach(function (el) {
+            curtainObserver.observe(el);
+        });
+
+        // Family slide-in observer
+        var familyAnimElements = document.querySelectorAll('.family-photo-animate, .family-info-animate');
+
+        var familyObserver = new IntersectionObserver(function (entries) {
+            entries.forEach(function (entry) {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    familyObserver.unobserve(entry.target);
+                }
+            });
+        }, {
+            threshold: 0.15,
+            rootMargin: '0px 0px -60px 0px'
+        });
+
+        familyAnimElements.forEach(function (el) {
+            familyObserver.observe(el);
+        });
+
+        /* ==================== */
+        /* TYPEWRITER EFFECT    */
+        /* ==================== */
+        var aboutText = document.getElementById('aboutText');
+
+        if (aboutText) {
+            var originalHTML = aboutText.innerHTML;
+            // Split text into words, preserving HTML entities
+            var textContent = aboutText.textContent.trim();
+            var words = textContent.split(/\s+/);
+            var wrappedHTML = words.map(function (word) {
+                return '<span class="tw-word">' + word + '</span>';
+            }).join(' ');
+            aboutText.innerHTML = wrappedHTML;
+
+            var twWords = aboutText.querySelectorAll('.tw-word');
+            var typewriterTriggered = false;
+
+            var typewriterObserver = new IntersectionObserver(function (entries) {
+                entries.forEach(function (entry) {
+                    if (entry.isIntersecting && !typewriterTriggered) {
+                        typewriterTriggered = true;
+                        twWords.forEach(function (word, i) {
+                            setTimeout(function () {
+                                word.classList.add('tw-visible');
+                            }, 80 * i);
+                        });
+                        typewriterObserver.unobserve(entry.target);
+                    }
+                });
+            }, {
+                threshold: 0.2,
+                rootMargin: '0px 0px -40px 0px'
+            });
+
+            typewriterObserver.observe(aboutText);
+        }
+
+        /* ==================== */
+        /* CUSTOM CURSOR        */
+        /* ==================== */
+        var cursor = document.getElementById('customCursor');
+        var cursorX = 0;
+        var cursorY = 0;
+        var currentX = 0;
+        var currentY = 0;
+        var isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+
+        if (!isTouchDevice && cursor) {
+            document.addEventListener('mousemove', function (e) {
+                cursorX = e.clientX;
+                cursorY = e.clientY;
+            }, { passive: true });
+
+            // Hover detection for interactive elements
+            var interactiveSelectors = 'a, button, .menu-item, .header-nav a, .footer-sns a, .hamburger';
+
+            document.querySelectorAll(interactiveSelectors).forEach(function (el) {
+                el.addEventListener('mouseenter', function () {
+                    cursor.classList.add('hovering');
+                });
+                el.addEventListener('mouseleave', function () {
+                    cursor.classList.remove('hovering');
+                });
+            });
+
+            // Smooth cursor follow with lag
+            function animateCursor() {
+                var ease = 0.15;
+                currentX += (cursorX - currentX) * ease;
+                currentY += (cursorY - currentY) * ease;
+                cursor.style.left = currentX + 'px';
+                cursor.style.top = currentY + 'px';
+                requestAnimationFrame(animateCursor);
+            }
+
+            animateCursor();
+
+            // Hide cursor when leaving window
+            document.addEventListener('mouseleave', function () {
+                cursor.style.opacity = '0';
+            });
+
+            document.addEventListener('mouseenter', function () {
+                cursor.style.opacity = '0.8';
+            });
+        } else if (cursor) {
+            cursor.style.display = 'none';
+        }
     </script>
 </body>
 </html>
