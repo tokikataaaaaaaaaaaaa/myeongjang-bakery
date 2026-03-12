@@ -1,0 +1,1291 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>명장시대 — Warm Artisan</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* ===== Reset & Root ===== */
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --warm-brown: #3d2b1f;
+            --wheat-gold: #d4a843;
+            --cream: #faf3e8;
+            --terracotta: #b86f4c;
+            --dark-walnut: #2a1a0f;
+            --linen: #f5efe6;
+            --shadow-warm: rgba(42, 26, 15, 0.15);
+            --shadow-glow: rgba(212, 168, 67, 0.2);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: var(--cream);
+            color: var(--warm-brown);
+            font-family: 'Noto Sans KR', sans-serif;
+            font-weight: 400;
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        /* ===== Wood Grain Texture Overlay ===== */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background:
+                repeating-linear-gradient(
+                    90deg,
+                    transparent,
+                    transparent 11px,
+                    rgba(61, 43, 31, 0.015) 11px,
+                    rgba(61, 43, 31, 0.015) 12px
+                ),
+                repeating-linear-gradient(
+                    87deg,
+                    transparent,
+                    transparent 23px,
+                    rgba(61, 43, 31, 0.01) 23px,
+                    rgba(61, 43, 31, 0.01) 24px
+                ),
+                repeating-linear-gradient(
+                    92deg,
+                    transparent,
+                    transparent 37px,
+                    rgba(61, 43, 31, 0.008) 37px,
+                    rgba(61, 43, 31, 0.008) 38px
+                );
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Paper texture noise */
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        /* ===== Typography ===== */
+        h1, h2, h3, h4 {
+            font-family: 'Libre Baskerville', serif;
+            font-weight: 700;
+            color: var(--dark-walnut);
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: clamp(1.6rem, 4vw, 2.4rem);
+            margin-bottom: 0.5em;
+            position: relative;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            font-size: 1rem;
+            color: var(--terracotta);
+            font-weight: 300;
+            margin-bottom: 3rem;
+        }
+
+        /* ===== Wavy SVG Divider ===== */
+        .wavy-divider {
+            display: block;
+            margin: 0 auto 2.5rem;
+            width: 120px;
+            height: 12px;
+        }
+
+        /* ===== Scroll Fade-up Animation ===== */
+        .fade-up {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.7s ease, transform 0.7s ease;
+        }
+
+        .fade-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ===== Flour Dust Particles ===== */
+        .flour-particles {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 3;
+            overflow: hidden;
+        }
+
+        .flour-dot {
+            position: absolute;
+            width: var(--size, 3px);
+            height: var(--size, 3px);
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 50%;
+            animation: flour-float var(--dur, 12s) var(--delay, 0s) infinite linear;
+        }
+
+        @keyframes flour-float {
+            0% {
+                transform: translate(0, 100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.7;
+            }
+            90% {
+                opacity: 0.5;
+            }
+            100% {
+                transform: translate(var(--drift, 60px), -20px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* ===== Floating Back Button ===== */
+        .back-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 100;
+            background: var(--dark-walnut);
+            color: var(--cream);
+            border: none;
+            padding: 10px 18px;
+            border-radius: 30px;
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 4px 16px var(--shadow-warm);
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: var(--warm-brown);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 24px var(--shadow-warm);
+        }
+
+        .back-btn svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        /* ===== Section Common ===== */
+        section {
+            position: relative;
+            z-index: 5;
+            padding: 80px 20px;
+        }
+
+        .container {
+            max-width: 1080px;
+            margin: 0 auto;
+        }
+
+        /* ============================================================
+           HERO SECTION
+        ============================================================ */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+            background:
+                radial-gradient(ellipse 60% 50% at 50% 55%, rgba(212, 168, 67, 0.15) 0%, transparent 70%),
+                linear-gradient(180deg, var(--linen) 0%, var(--cream) 50%, #f0e6d6 100%);
+            overflow: hidden;
+            padding: 60px 20px;
+        }
+
+        /* Warm glow at center */
+        .hero::before {
+            content: '';
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(212, 168, 67, 0.12) 0%, transparent 70%);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: glow-pulse 5s ease-in-out infinite;
+        }
+
+        @keyframes glow-pulse {
+            0%, 100% { opacity: 0.6; transform: translate(-50%, -50%) scale(1); }
+            50% { opacity: 1; transform: translate(-50%, -50%) scale(1.15); }
+        }
+
+        /* Floating wheat illustrations */
+        .wheat-float {
+            position: absolute;
+            opacity: 0.12;
+            animation: wheat-drift 20s ease-in-out infinite;
+        }
+
+        .wheat-float:nth-child(1) {
+            top: 15%;
+            left: 8%;
+            animation-delay: 0s;
+            transform: rotate(-15deg);
+        }
+        .wheat-float:nth-child(2) {
+            top: 20%;
+            right: 10%;
+            animation-delay: -5s;
+            transform: rotate(20deg) scaleX(-1);
+        }
+        .wheat-float:nth-child(3) {
+            bottom: 18%;
+            left: 12%;
+            animation-delay: -10s;
+            transform: rotate(10deg);
+        }
+        .wheat-float:nth-child(4) {
+            bottom: 15%;
+            right: 8%;
+            animation-delay: -15s;
+            transform: rotate(-25deg) scaleX(-1);
+        }
+
+        @keyframes wheat-drift {
+            0%, 100% { transform: translateY(0) rotate(var(--rot, 0deg)); }
+            50% { transform: translateY(-15px) rotate(var(--rot, 0deg)); }
+        }
+
+        .hero-badge {
+            display: inline-block;
+            font-family: 'Libre Baskerville', serif;
+            font-size: 0.8rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--terracotta);
+            border: 1px solid var(--terracotta);
+            border-radius: 30px;
+            padding: 8px 24px;
+            margin-bottom: 2rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-title {
+            font-family: 'Libre Baskerville', serif;
+            font-size: clamp(3rem, 10vw, 6rem);
+            color: var(--dark-walnut);
+            line-height: 1.1;
+            margin-bottom: 0.3em;
+            position: relative;
+            z-index: 2;
+            text-shadow: 0 2px 30px rgba(212, 168, 67, 0.15);
+        }
+
+        .hero-tagline {
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: clamp(1.1rem, 3vw, 1.5rem);
+            font-weight: 300;
+            color: var(--warm-brown);
+            letter-spacing: 2px;
+            position: relative;
+            z-index: 2;
+            margin-bottom: 2rem;
+        }
+
+        .hero-scroll-hint {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            color: var(--terracotta);
+            font-size: 0.75rem;
+            letter-spacing: 2px;
+            opacity: 0.6;
+            animation: hint-bob 2s ease-in-out infinite;
+        }
+
+        @keyframes hint-bob {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(6px); }
+        }
+
+        .hero-scroll-hint svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* ============================================================
+           ABOUT SECTION — Recipe Card Style
+        ============================================================ */
+        .about {
+            background:
+                linear-gradient(180deg, #f0e6d6 0%, var(--cream) 40%, var(--linen) 100%);
+        }
+
+        .recipe-card {
+            max-width: 700px;
+            margin: 0 auto;
+            background:
+                linear-gradient(145deg, #fdf8f0, #f8f0e2);
+            border-radius: 20px;
+            padding: 3rem 2.5rem;
+            box-shadow:
+                0 8px 40px var(--shadow-warm),
+                inset 0 1px 0 rgba(255, 255, 255, 0.8);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Subtle wood border effect */
+        .recipe-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 20px;
+            border: 2px solid rgba(61, 43, 31, 0.08);
+            pointer-events: none;
+        }
+
+        /* Corner flourish */
+        .recipe-card::after {
+            content: '';
+            position: absolute;
+            top: -1px;
+            right: -1px;
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, transparent 50%, rgba(212, 168, 67, 0.08) 50%);
+            border-radius: 0 20px 0 0;
+        }
+
+        .recipe-card-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px dashed var(--terracotta);
+        }
+
+        .recipe-card-header h2 {
+            font-size: clamp(1.4rem, 3.5vw, 1.8rem);
+            margin-bottom: 0.3em;
+        }
+
+        .recipe-card-header .label {
+            font-size: 0.8rem;
+            color: var(--terracotta);
+            letter-spacing: 2px;
+            font-weight: 500;
+        }
+
+        .recipe-card p {
+            font-size: 1rem;
+            line-height: 2;
+            color: var(--warm-brown);
+            font-weight: 300;
+        }
+
+        .recipe-card p + p {
+            margin-top: 1rem;
+        }
+
+        .master-stats {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px dashed var(--terracotta);
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-family: 'Libre Baskerville', serif;
+            font-size: 1.8rem;
+            color: var(--terracotta);
+            display: block;
+            line-height: 1.2;
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--warm-brown);
+            letter-spacing: 1px;
+            font-weight: 300;
+        }
+
+        /* ============================================================
+           BREADS SECTION
+        ============================================================ */
+        .breads {
+            background: var(--cream);
+        }
+
+        .bread-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .bread-card {
+            background: linear-gradient(155deg, #fdf8f0, #f5ebe0);
+            border-radius: 18px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px var(--shadow-warm);
+            transition: all 0.4s ease;
+            cursor: default;
+        }
+
+        .bread-card:hover {
+            transform: translateY(-6px);
+            box-shadow:
+                0 12px 40px var(--shadow-warm),
+                0 0 30px var(--shadow-glow);
+        }
+
+        .bread-img {
+            width: 100%;
+            height: 200px;
+            position: relative;
+            overflow: hidden;
+            border-radius: 18px 18px 0 0;
+        }
+
+        .bread-img-inner {
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s ease;
+        }
+
+        .bread-card:hover .bread-img-inner {
+            transform: scale(1.05);
+        }
+
+        /* Bread gradient placeholders — warm bread-like tones */
+        .bread-img-1 .bread-img-inner {
+            background: linear-gradient(135deg, #d4a843, #c49035, #e8c878);
+        }
+        .bread-img-2 .bread-img-inner {
+            background: linear-gradient(135deg, #c9a06c, #b08850, #dbb87a);
+        }
+        .bread-img-3 .bread-img-inner {
+            background: linear-gradient(135deg, #d4a843, #c9922e, #e6be60);
+        }
+        .bread-img-4 .bread-img-inner {
+            background: linear-gradient(135deg, #a07850, #8b6540, #c49a6e);
+        }
+        .bread-img-5 .bread-img-inner {
+            background: linear-gradient(135deg, #8b6e50, #7a5c3e, #a08060);
+        }
+        .bread-img-6 .bread-img-inner {
+            background: linear-gradient(135deg, #e0c890, #d4b870, #edd8a0);
+        }
+
+        .bread-number {
+            position: absolute;
+            top: 16px;
+            left: 16px;
+            font-family: 'Libre Baskerville', serif;
+            font-style: italic;
+            font-size: 2.5rem;
+            color: rgba(255, 255, 255, 0.5);
+            line-height: 1;
+        }
+
+        .bread-info {
+            padding: 1.5rem;
+        }
+
+        .bread-name {
+            font-family: 'Libre Baskerville', serif;
+            font-size: 1.15rem;
+            color: var(--dark-walnut);
+            margin-bottom: 0.5em;
+        }
+
+        .bread-desc {
+            font-size: 0.9rem;
+            color: var(--warm-brown);
+            font-weight: 300;
+            line-height: 1.6;
+            margin-bottom: 1em;
+        }
+
+        .bread-price {
+            font-family: 'Libre Baskerville', serif;
+            font-size: 1.1rem;
+            color: var(--terracotta);
+            font-weight: 700;
+        }
+
+        /* ============================================================
+           PROCESS SECTION
+        ============================================================ */
+        .process {
+            background:
+                linear-gradient(180deg, var(--linen) 0%, #f0e6d6 50%, var(--cream) 100%);
+        }
+
+        .process-timeline {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            position: relative;
+        }
+
+        /* Connecting line */
+        .process-timeline::before {
+            content: '';
+            position: absolute;
+            top: 55px;
+            left: 12.5%;
+            right: 12.5%;
+            height: 2px;
+            background: repeating-linear-gradient(
+                90deg,
+                var(--terracotta) 0,
+                var(--terracotta) 8px,
+                transparent 8px,
+                transparent 14px
+            );
+            opacity: 0.4;
+        }
+
+        .process-step {
+            text-align: center;
+            position: relative;
+        }
+
+        .step-icon {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 1.2rem;
+            border-radius: 50%;
+            background: linear-gradient(145deg, #fdf8f0, #f0e6d6);
+            box-shadow:
+                0 4px 16px var(--shadow-warm),
+                inset 0 -2px 6px rgba(42, 26, 15, 0.05),
+                inset 0 2px 4px rgba(255, 255, 255, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            z-index: 2;
+            transition: all 0.4s ease;
+        }
+
+        .process-step:hover .step-icon {
+            transform: translateY(-4px);
+            box-shadow:
+                0 8px 24px var(--shadow-warm),
+                0 0 20px var(--shadow-glow),
+                inset 0 -2px 6px rgba(42, 26, 15, 0.05),
+                inset 0 2px 4px rgba(255, 255, 255, 0.8);
+        }
+
+        .step-icon svg {
+            width: 44px;
+            height: 44px;
+        }
+
+        .step-number {
+            font-family: 'Libre Baskerville', serif;
+            font-style: italic;
+            font-size: 0.85rem;
+            color: var(--terracotta);
+            margin-bottom: 0.5em;
+        }
+
+        .step-name {
+            font-family: 'Libre Baskerville', serif;
+            font-size: 1.1rem;
+            color: var(--dark-walnut);
+            margin-bottom: 0.4em;
+        }
+
+        .step-desc {
+            font-size: 0.85rem;
+            color: var(--warm-brown);
+            font-weight: 300;
+            line-height: 1.5;
+            max-width: 200px;
+            margin: 0 auto;
+        }
+
+        .step-arrow {
+            display: none;
+        }
+
+        /* ============================================================
+           STORE INFO SECTION
+        ============================================================ */
+        .store-info {
+            background: var(--cream);
+        }
+
+        .info-card {
+            max-width: 600px;
+            margin: 0 auto;
+            background:
+                linear-gradient(155deg, var(--dark-walnut), #3a2518);
+            color: var(--cream);
+            border-radius: 20px;
+            padding: 3rem;
+            box-shadow: 0 12px 48px rgba(42, 26, 15, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .info-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                repeating-linear-gradient(
+                    90deg,
+                    transparent,
+                    transparent 15px,
+                    rgba(255, 255, 255, 0.01) 15px,
+                    rgba(255, 255, 255, 0.01) 16px
+                );
+            pointer-events: none;
+        }
+
+        /* Warm glow accent */
+        .info-card::after {
+            content: '';
+            position: absolute;
+            bottom: -30px;
+            right: -30px;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(212, 168, 67, 0.1) 0%, transparent 70%);
+        }
+
+        .info-card h2 {
+            font-size: 1.5rem;
+            color: var(--wheat-gold);
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .info-rows {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .info-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+        .info-icon {
+            flex-shrink: 0;
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            background: rgba(212, 168, 67, 0.12);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .info-icon svg {
+            width: 20px;
+            height: 20px;
+            stroke: var(--wheat-gold);
+        }
+
+        .info-label {
+            font-size: 0.75rem;
+            color: rgba(250, 243, 232, 0.5);
+            letter-spacing: 2px;
+            margin-bottom: 0.2em;
+            font-weight: 300;
+        }
+
+        .info-value {
+            font-size: 1.05rem;
+            color: var(--cream);
+            font-weight: 400;
+        }
+
+        /* ============================================================
+           FOOTER
+        ============================================================ */
+        .footer {
+            background: var(--dark-walnut);
+            color: var(--cream);
+            text-align: center;
+            padding: 3rem 20px;
+            position: relative;
+            z-index: 5;
+        }
+
+        .footer-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--wheat-gold);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+            margin-bottom: 1rem;
+        }
+
+        .footer-link:hover {
+            color: var(--cream);
+        }
+
+        .footer-copy {
+            font-size: 0.75rem;
+            color: rgba(250, 243, 232, 0.4);
+            font-weight: 300;
+        }
+
+        /* ============================================================
+           RESPONSIVE
+        ============================================================ */
+        @media (max-width: 768px) {
+            section {
+                padding: 60px 16px;
+            }
+
+            .bread-grid {
+                grid-template-columns: 1fr;
+                max-width: 400px;
+                margin: 0 auto;
+            }
+
+            .process-timeline {
+                grid-template-columns: 1fr;
+                gap: 2.5rem;
+                max-width: 300px;
+                margin: 0 auto;
+            }
+
+            .process-timeline::before {
+                display: none;
+            }
+
+            .step-arrow {
+                display: block;
+                text-align: center;
+                color: var(--terracotta);
+                opacity: 0.4;
+                font-size: 1.5rem;
+                margin-top: -1rem;
+                margin-bottom: -1rem;
+            }
+
+            .recipe-card {
+                padding: 2rem 1.5rem;
+            }
+
+            .master-stats {
+                gap: 1.5rem;
+            }
+
+            .info-card {
+                padding: 2rem 1.5rem;
+            }
+
+            .hero-title {
+                font-size: clamp(2.4rem, 10vw, 4rem);
+            }
+
+            .back-btn {
+                top: 12px;
+                left: 12px;
+                padding: 8px 14px;
+                font-size: 0.8rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .bread-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .info-row {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Flour Dust Particles -->
+<div class="flour-particles" id="flourParticles"></div>
+
+<!-- Floating Back Button -->
+<a href="../index.html" class="back-btn">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M19 12H5M12 19l-7-7 7-7"/>
+    </svg>
+    컨셉 목록
+</a>
+
+<!-- ============================================================
+     HERO
+============================================================ -->
+<section class="hero">
+    <!-- Floating wheat SVG illustrations -->
+    <svg class="wheat-float" width="120" height="200" viewBox="0 0 120 200" fill="none" style="--rot: -15deg;">
+        <path d="M60 200 C60 200 60 20 60 10" stroke="#3d2b1f" stroke-width="2"/>
+        <ellipse cx="60" cy="30" rx="18" ry="28" fill="#3d2b1f" opacity="0.3" transform="rotate(-20 60 30)"/>
+        <ellipse cx="60" cy="55" rx="16" ry="24" fill="#3d2b1f" opacity="0.25" transform="rotate(15 60 55)"/>
+        <ellipse cx="60" cy="80" rx="14" ry="22" fill="#3d2b1f" opacity="0.2" transform="rotate(-10 60 80)"/>
+        <ellipse cx="60" cy="105" rx="12" ry="18" fill="#3d2b1f" opacity="0.15" transform="rotate(12 60 105)"/>
+        <ellipse cx="60" cy="125" rx="10" ry="14" fill="#3d2b1f" opacity="0.1" transform="rotate(-8 60 125)"/>
+    </svg>
+    <svg class="wheat-float" width="120" height="200" viewBox="0 0 120 200" fill="none" style="--rot: 20deg;">
+        <path d="M60 200 C60 200 60 20 60 10" stroke="#3d2b1f" stroke-width="2"/>
+        <ellipse cx="60" cy="30" rx="18" ry="28" fill="#3d2b1f" opacity="0.3" transform="rotate(-20 60 30)"/>
+        <ellipse cx="60" cy="55" rx="16" ry="24" fill="#3d2b1f" opacity="0.25" transform="rotate(15 60 55)"/>
+        <ellipse cx="60" cy="80" rx="14" ry="22" fill="#3d2b1f" opacity="0.2" transform="rotate(-10 60 80)"/>
+        <ellipse cx="60" cy="105" rx="12" ry="18" fill="#3d2b1f" opacity="0.15" transform="rotate(12 60 105)"/>
+        <ellipse cx="60" cy="125" rx="10" ry="14" fill="#3d2b1f" opacity="0.1" transform="rotate(-8 60 125)"/>
+    </svg>
+    <svg class="wheat-float" width="100" height="180" viewBox="0 0 100 180" fill="none" style="--rot: 10deg;">
+        <path d="M50 180 C50 180 50 20 50 10" stroke="#3d2b1f" stroke-width="2"/>
+        <ellipse cx="50" cy="28" rx="15" ry="24" fill="#3d2b1f" opacity="0.25" transform="rotate(18 50 28)"/>
+        <ellipse cx="50" cy="50" rx="13" ry="20" fill="#3d2b1f" opacity="0.2" transform="rotate(-12 50 50)"/>
+        <ellipse cx="50" cy="72" rx="11" ry="16" fill="#3d2b1f" opacity="0.15" transform="rotate(10 50 72)"/>
+        <ellipse cx="50" cy="90" rx="9" ry="12" fill="#3d2b1f" opacity="0.1" transform="rotate(-8 50 90)"/>
+    </svg>
+    <svg class="wheat-float" width="100" height="180" viewBox="0 0 100 180" fill="none" style="--rot: -25deg;">
+        <path d="M50 180 C50 180 50 20 50 10" stroke="#3d2b1f" stroke-width="2"/>
+        <ellipse cx="50" cy="28" rx="15" ry="24" fill="#3d2b1f" opacity="0.25" transform="rotate(18 50 28)"/>
+        <ellipse cx="50" cy="50" rx="13" ry="20" fill="#3d2b1f" opacity="0.2" transform="rotate(-12 50 50)"/>
+        <ellipse cx="50" cy="72" rx="11" ry="16" fill="#3d2b1f" opacity="0.15" transform="rotate(10 50 72)"/>
+        <ellipse cx="50" cy="90" rx="9" ry="12" fill="#3d2b1f" opacity="0.1" transform="rotate(-8 50 90)"/>
+    </svg>
+
+    <span class="hero-badge fade-up">Artisan Bakery Since 1991</span>
+    <h1 class="hero-title fade-up">명장시대</h1>
+    <p class="hero-tagline fade-up">정성을 담아 구운 하루</p>
+
+    <div class="hero-scroll-hint">
+        <span>SCROLL</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 5v14M5 12l7 7 7-7"/>
+        </svg>
+    </div>
+</section>
+
+<!-- ============================================================
+     ABOUT
+============================================================ -->
+<section class="about" id="about">
+    <div class="container">
+        <div class="recipe-card fade-up">
+            <div class="recipe-card-header">
+                <p class="label">MASTER BAKER'S STORY</p>
+                <h2>김영수 명장의 이야기</h2>
+            </div>
+            <!-- Wavy divider -->
+            <svg class="wavy-divider" viewBox="0 0 120 12" fill="none">
+                <path d="M0 6 Q15 0 30 6 T60 6 T90 6 T120 6" stroke="#b86f4c" stroke-width="1.5" fill="none" opacity="0.4"/>
+            </svg>
+            <p>
+                1991년, 작은 동네 빵집에서 시작된 이야기입니다. 김영수 명장은 새벽 4시에 일어나 반죽을 시작하는 것으로 하루를 열었습니다. 밀가루와 물, 소금, 그리고 시간이 만들어내는 마법을 35년간 지켜왔습니다.
+            </p>
+            <p>
+                파리의 르 코르동 블루에서 3년간 수련하며 프랑스 전통 제빵의 정수를 배웠고, 귀국 후 대한민국 제과명장으로 선정되었습니다. 하지만 그에게 가장 큰 자부심은 매일 아침 빵을 사러 오는 단골 손님들의 미소입니다.
+            </p>
+            <p>
+                "좋은 빵은 기다림에서 태어납니다. 서두르지 않고, 반죽이 스스로 이야기할 때까지 기다려야 합니다."
+            </p>
+            <div class="master-stats">
+                <div class="stat-item">
+                    <span class="stat-number">35</span>
+                    <span class="stat-label">Years of Craft</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">Paris</span>
+                    <span class="stat-label">Le Cordon Bleu</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">명장</span>
+                    <span class="stat-label">Master Baker</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ============================================================
+     OUR BREADS
+============================================================ -->
+<section class="breads" id="breads">
+    <div class="container">
+        <h2 class="section-title fade-up">Our Breads</h2>
+        <p class="section-subtitle fade-up">하루를 따뜻하게 시작하는 명장의 빵</p>
+        <!-- Wavy divider -->
+        <svg class="wavy-divider fade-up" viewBox="0 0 120 12" fill="none">
+            <path d="M0 6 Q15 0 30 6 T60 6 T90 6 T120 6" stroke="#b86f4c" stroke-width="1.5" fill="none" opacity="0.4"/>
+        </svg>
+
+        <div class="bread-grid">
+            <!-- Bread 1 -->
+            <div class="bread-card fade-up">
+                <div class="bread-img bread-img-1">
+                    <div class="bread-img-inner"></div>
+                    <span class="bread-number">01</span>
+                </div>
+                <div class="bread-info">
+                    <h3 class="bread-name">크루아상 클래식</h3>
+                    <p class="bread-desc">72겹의 버터 레이어가 만들어내는 바삭한 결. 프랑스 AOP 버터만을 사용하여 명장이 직접 접어 만듭니다.</p>
+                    <span class="bread-price">&#8361;5,500</span>
+                </div>
+            </div>
+
+            <!-- Bread 2 -->
+            <div class="bread-card fade-up">
+                <div class="bread-img bread-img-2">
+                    <div class="bread-img-inner"></div>
+                    <span class="bread-number">02</span>
+                </div>
+                <div class="bread-info">
+                    <h3 class="bread-name">바게트 트라디시옹</h3>
+                    <p class="bread-desc">프랑스 전통 방식 그대로. 24시간 저온 발효로 깊은 풍미와 바삭한 크러스트를 완성합니다.</p>
+                    <span class="bread-price">&#8361;7,000</span>
+                </div>
+            </div>
+
+            <!-- Bread 3 -->
+            <div class="bread-card fade-up">
+                <div class="bread-img bread-img-3">
+                    <div class="bread-img-inner"></div>
+                    <span class="bread-number">03</span>
+                </div>
+                <div class="bread-info">
+                    <h3 class="bread-name">브리오슈 도레</h3>
+                    <p class="bread-desc">황금빛으로 빛나는 부드러운 브리오슈. 유기농 달걀과 발효버터의 풍부한 맛이 입안에 퍼집니다.</p>
+                    <span class="bread-price">&#8361;6,500</span>
+                </div>
+            </div>
+
+            <!-- Bread 4 -->
+            <div class="bread-card fade-up">
+                <div class="bread-img bread-img-4">
+                    <div class="bread-img-inner"></div>
+                    <span class="bread-number">04</span>
+                </div>
+                <div class="bread-info">
+                    <h3 class="bread-name">깜빠뉴</h3>
+                    <p class="bread-desc">시골 빵의 정취를 담은 투박하면서도 깊은 맛. 천연 발효종으로 48시간 숙성하여 구워냅니다.</p>
+                    <span class="bread-price">&#8361;9,000</span>
+                </div>
+            </div>
+
+            <!-- Bread 5 -->
+            <div class="bread-card fade-up">
+                <div class="bread-img bread-img-5">
+                    <div class="bread-img-inner"></div>
+                    <span class="bread-number">05</span>
+                </div>
+                <div class="bread-info">
+                    <h3 class="bread-name">호밀 사워도우</h3>
+                    <p class="bread-desc">독일산 호밀과 35년 된 사워도우 스타터로 만드는 건강한 빵. 은은한 산미와 고소한 풍미.</p>
+                    <span class="bread-price">&#8361;8,500</span>
+                </div>
+            </div>
+
+            <!-- Bread 6 -->
+            <div class="bread-card fade-up">
+                <div class="bread-img bread-img-6">
+                    <div class="bread-img-inner"></div>
+                    <span class="bread-number">06</span>
+                </div>
+                <div class="bread-info">
+                    <h3 class="bread-name">명장 식빵</h3>
+                    <p class="bread-desc">명장시대의 시그니처. 국산 우유와 생크림으로 만든 촉촉하고 부드러운 식빵. 그 자체로 완벽합니다.</p>
+                    <span class="bread-price">&#8361;12,000</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ============================================================
+     PROCESS
+============================================================ -->
+<section class="process" id="process">
+    <div class="container">
+        <h2 class="section-title fade-up">The Process</h2>
+        <p class="section-subtitle fade-up">빵이 만들어지는 과정</p>
+        <svg class="wavy-divider fade-up" viewBox="0 0 120 12" fill="none">
+            <path d="M0 6 Q15 0 30 6 T60 6 T90 6 T120 6" stroke="#b86f4c" stroke-width="1.5" fill="none" opacity="0.4"/>
+        </svg>
+
+        <div class="process-timeline">
+            <!-- Step 1: 반죽 (Mixing) -->
+            <div class="process-step fade-up">
+                <div class="step-icon">
+                    <svg viewBox="0 0 64 64" fill="none">
+                        <!-- Bowl shape -->
+                        <path d="M12 28 C12 28 14 48 32 48 C50 48 52 28 52 28" stroke="#3d2b1f" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+                        <path d="M8 28 H56" stroke="#3d2b1f" stroke-width="2.5" stroke-linecap="round"/>
+                        <!-- Swirl in bowl -->
+                        <path d="M26 34 C26 30 32 28 34 32 C36 36 30 38 28 36" stroke="#b86f4c" stroke-width="2" stroke-linecap="round" fill="none"/>
+                        <!-- Flour sprinkle -->
+                        <circle cx="24" cy="22" r="1.5" fill="#d4a843" opacity="0.6"/>
+                        <circle cx="32" cy="20" r="1" fill="#d4a843" opacity="0.5"/>
+                        <circle cx="40" cy="22" r="1.5" fill="#d4a843" opacity="0.6"/>
+                        <circle cx="36" cy="18" r="1" fill="#d4a843" opacity="0.4"/>
+                    </svg>
+                </div>
+                <span class="step-number">Step 01</span>
+                <h3 class="step-name">반죽</h3>
+                <p class="step-desc">엄선된 재료를 정확한 비율로 배합하여 반죽합니다</p>
+            </div>
+
+            <div class="step-arrow">&#8595;</div>
+
+            <!-- Step 2: 발효 (Fermentation) -->
+            <div class="process-step fade-up">
+                <div class="step-icon">
+                    <svg viewBox="0 0 64 64" fill="none">
+                        <!-- Dough mound -->
+                        <ellipse cx="32" cy="42" rx="20" ry="10" stroke="#3d2b1f" stroke-width="2.5" fill="none"/>
+                        <path d="M12 42 C12 42 16 24 32 24 C48 24 52 42 52 42" stroke="#3d2b1f" stroke-width="2.5" fill="none"/>
+                        <!-- Rising bubbles -->
+                        <circle cx="26" cy="20" r="2" stroke="#b86f4c" stroke-width="1.5" fill="none" opacity="0.6"/>
+                        <circle cx="34" cy="16" r="2.5" stroke="#b86f4c" stroke-width="1.5" fill="none" opacity="0.5"/>
+                        <circle cx="40" cy="20" r="1.5" stroke="#b86f4c" stroke-width="1.5" fill="none" opacity="0.4"/>
+                        <!-- Up arrows -->
+                        <path d="M26 24 L26 22" stroke="#b86f4c" stroke-width="1" stroke-linecap="round" opacity="0.4"/>
+                        <path d="M34 20 L34 18" stroke="#b86f4c" stroke-width="1" stroke-linecap="round" opacity="0.4"/>
+                    </svg>
+                </div>
+                <span class="step-number">Step 02</span>
+                <h3 class="step-name">발효</h3>
+                <p class="step-desc">저온에서 천천히 시간의 맛을 더합니다</p>
+            </div>
+
+            <div class="step-arrow">&#8595;</div>
+
+            <!-- Step 3: 성형 (Shaping) -->
+            <div class="process-step fade-up">
+                <div class="step-icon">
+                    <svg viewBox="0 0 64 64" fill="none">
+                        <!-- Hands shaping -->
+                        <path d="M16 36 C16 28 24 24 32 24 C40 24 48 28 48 36" stroke="#3d2b1f" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+                        <!-- Bread shape being formed -->
+                        <ellipse cx="32" cy="38" rx="14" ry="8" stroke="#3d2b1f" stroke-width="2.5" fill="none"/>
+                        <!-- Score marks -->
+                        <path d="M26 36 L30 40" stroke="#b86f4c" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/>
+                        <path d="M32 34 L32 40" stroke="#b86f4c" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/>
+                        <path d="M38 36 L34 40" stroke="#b86f4c" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/>
+                        <!-- Hand curves -->
+                        <path d="M14 34 C10 30 12 26 16 28" stroke="#3d2b1f" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.5"/>
+                        <path d="M50 34 C54 30 52 26 48 28" stroke="#3d2b1f" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.5"/>
+                    </svg>
+                </div>
+                <span class="step-number">Step 03</span>
+                <h3 class="step-name">성형</h3>
+                <p class="step-desc">명장의 손끝에서 빵의 형태가 완성됩니다</p>
+            </div>
+
+            <div class="step-arrow">&#8595;</div>
+
+            <!-- Step 4: 굽기 (Baking) -->
+            <div class="process-step fade-up">
+                <div class="step-icon">
+                    <svg viewBox="0 0 64 64" fill="none">
+                        <!-- Oven shape -->
+                        <rect x="14" y="24" width="36" height="26" rx="4" stroke="#3d2b1f" stroke-width="2.5" fill="none"/>
+                        <rect x="20" y="30" width="24" height="14" rx="2" stroke="#3d2b1f" stroke-width="1.5" fill="none" opacity="0.5"/>
+                        <!-- Heat waves -->
+                        <path d="M24 20 C24 18 26 16 26 14" stroke="#b86f4c" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.6"/>
+                        <path d="M32 20 C32 18 34 16 34 14" stroke="#b86f4c" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.5"/>
+                        <path d="M40 20 C40 18 42 16 42 14" stroke="#b86f4c" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.4"/>
+                        <!-- Glow inside oven -->
+                        <path d="M22 38 L42 38" stroke="#d4a843" stroke-width="1" opacity="0.4"/>
+                        <path d="M22 42 L42 42" stroke="#d4a843" stroke-width="1" opacity="0.3"/>
+                    </svg>
+                </div>
+                <span class="step-number">Step 04</span>
+                <h3 class="step-name">굽기</h3>
+                <p class="step-desc">정확한 온도에서 황금빛으로 구워냅니다</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ============================================================
+     STORE INFO
+============================================================ -->
+<section class="store-info" id="info">
+    <div class="container">
+        <h2 class="section-title fade-up">Visit Us</h2>
+        <p class="section-subtitle fade-up">명장시대를 만나는 곳</p>
+        <svg class="wavy-divider fade-up" viewBox="0 0 120 12" fill="none">
+            <path d="M0 6 Q15 0 30 6 T60 6 T90 6 T120 6" stroke="#b86f4c" stroke-width="1.5" fill="none" opacity="0.4"/>
+        </svg>
+
+        <div class="info-card fade-up">
+            <h2>명장시대</h2>
+            <div class="info-rows">
+                <!-- Address -->
+                <div class="info-row">
+                    <div class="info-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                            <circle cx="12" cy="10" r="3"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="info-label">ADDRESS</p>
+                        <p class="info-value">서울시 강남구 도산대로 123</p>
+                    </div>
+                </div>
+
+                <!-- Hours -->
+                <div class="info-row">
+                    <div class="info-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"/>
+                            <polyline points="12 6 12 12 16 14"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="info-label">HOURS</p>
+                        <p class="info-value">매일 08:00 - 21:00</p>
+                    </div>
+                </div>
+
+                <!-- Phone -->
+                <div class="info-row">
+                    <div class="info-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="info-label">PHONE</p>
+                        <p class="info-value">02-1234-5678</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ============================================================
+     FOOTER
+============================================================ -->
+<footer class="footer">
+    <div>
+        <a href="../index.html" class="footer-link">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M19 12H5M12 19l-7-7 7-7"/>
+            </svg>
+            모든 컨셉 보기
+        </a>
+    </div>
+    <p class="footer-copy">&copy; 2026 명장시대. All rights reserved.</p>
+</footer>
+
+<!-- ============================================================
+     JAVASCRIPT
+============================================================ -->
+<script>
+(function() {
+    'use strict';
+
+    // --- Flour dust particles ---
+    const particleContainer = document.getElementById('flourParticles');
+    const particleCount = 25;
+
+    for (let i = 0; i < particleCount; i++) {
+        const dot = document.createElement('div');
+        dot.className = 'flour-dot';
+        const size = Math.random() * 3 + 1.5;
+        const left = Math.random() * 100;
+        const dur = Math.random() * 15 + 10;
+        const delay = Math.random() * -20;
+        const drift = (Math.random() - 0.5) * 120;
+
+        dot.style.setProperty('--size', size + 'px');
+        dot.style.setProperty('--dur', dur + 's');
+        dot.style.setProperty('--delay', delay + 's');
+        dot.style.setProperty('--drift', drift + 'px');
+        dot.style.left = left + '%';
+
+        particleContainer.appendChild(dot);
+    }
+
+    // --- Scroll-triggered fade-up animations ---
+    const fadeElements = document.querySelectorAll('.fade-up');
+
+    const observerOptions = {
+        root: null,
+        rootMargin: '0px 0px -60px 0px',
+        threshold: 0.1
+    };
+
+    const observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, observerOptions);
+
+    fadeElements.forEach(function(el) {
+        observer.observe(el);
+    });
+
+    // --- Stagger animation delay for bread cards ---
+    const breadCards = document.querySelectorAll('.bread-card.fade-up');
+    breadCards.forEach(function(card, index) {
+        card.style.transitionDelay = (index * 0.1) + 's';
+    });
+
+    // --- Stagger animation delay for process steps ---
+    const processSteps = document.querySelectorAll('.process-step.fade-up');
+    processSteps.forEach(function(step, index) {
+        step.style.transitionDelay = (index * 0.15) + 's';
+    });
+
+})();
+</script>
+
+</body>
+</html>

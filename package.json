@@ -1,0 +1,23 @@
+{
+  "name": "myeongjang-bakery",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tokikataaaaaaaaaaaaa/myeongjang-bakery.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tokikataaaaaaaaaaaaa/myeongjang-bakery/issues"
+  },
+  "homepage": "https://github.com/tokikataaaaaaaaaaaaa/myeongjang-bakery#readme",
+  "devDependencies": {
+    "htmlhint": "^1.9.2"
+  }
+}

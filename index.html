@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>명장시대 — 컨셉 프로토타입</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700;900&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --cream: #f5efe6;
+            --espresso: #1a0f0a;
+            --gold: #c9a96e;
+            --warm-gray: #8a7e74;
+        }
+
+        body {
+            background: var(--espresso);
+            color: var(--cream);
+            font-family: 'Noto Serif KR', serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Grain overlay */
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            padding: 80px 20px 40px;
+            position: relative;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 1px;
+            background: var(--gold);
+        }
+
+        .brand-sub {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 0.85rem;
+            letter-spacing: 0.4em;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 16px;
+            font-weight: 400;
+        }
+
+        .brand-name {
+            font-size: clamp(2.8rem, 7vw, 5rem);
+            font-weight: 900;
+            letter-spacing: 0.08em;
+            line-height: 1.2;
+            margin-bottom: 20px;
+        }
+
+        .brand-name span {
+            display: inline-block;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: revealChar 0.6s ease forwards;
+        }
+
+        @keyframes revealChar {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .tagline {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.1rem;
+            color: var(--warm-gray);
+            font-style: italic;
+            letter-spacing: 0.1em;
+        }
+
+        /* Divider */
+        .divider {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            padding: 30px 0;
+        }
+
+        .divider-line {
+            width: 80px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--gold), transparent);
+        }
+
+        .divider-diamond {
+            width: 6px;
+            height: 6px;
+            background: var(--gold);
+            transform: rotate(45deg);
+        }
+
+        /* Intro */
+        .intro {
+            text-align: center;
+            padding: 0 20px 50px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .intro p {
+            font-size: 0.95rem;
+            line-height: 2;
+            color: var(--warm-gray);
+        }
+
+        /* Concept Grid */
+        .concepts {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px 100px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 24px;
+        }
+
+        .concept-card {
+            position: relative;
+            border: 1px solid rgba(201, 169, 110, 0.15);
+            border-radius: 2px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+            text-decoration: none;
+            color: var(--cream);
+            display: block;
+            opacity: 0;
+            transform: translateY(40px);
+        }
+
+        .concept-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .concept-card:hover {
+            border-color: var(--gold);
+            transform: translateY(-4px);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+        }
+
+        .concept-card:hover .card-preview {
+            transform: scale(1.05);
+        }
+
+        .concept-card:hover .card-number {
+            color: var(--gold);
+        }
+
+        .concept-card:hover .card-arrow {
+            transform: translateX(6px);
+            opacity: 1;
+        }
+
+        .card-preview {
+            height: 260px;
+            transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Concept-specific preview backgrounds */
+        .concept-1 .card-preview {
+            background: linear-gradient(135deg, #1a0f0a 0%, #2a1f15 50%, #1a0f0a 100%);
+        }
+        .concept-1 .card-preview::before {
+            content: '';
+            position: absolute;
+            inset: 20px;
+            border: 1px solid rgba(201, 169, 110, 0.3);
+            background: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 20px,
+                rgba(201, 169, 110, 0.05) 20px,
+                rgba(201, 169, 110, 0.05) 21px
+            );
+        }
+        .concept-1 .card-preview::after {
+            content: '◆';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 3rem;
+            color: var(--gold);
+            opacity: 0.4;
+        }
+
+        .concept-2 .card-preview {
+            background: linear-gradient(180deg, #f5f0e8 0%, #e8e0d4 100%);
+        }
+        .concept-2 .card-preview::before {
+            content: '';
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 1px;
+            height: 80px;
+            background: #8a7e74;
+            opacity: 0.4;
+        }
+        .concept-2 .card-preview::after {
+            content: '○';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -60%);
+            font-size: 4rem;
+            color: #5a4f44;
+            opacity: 0.2;
+        }
+
+        .concept-3 .card-preview {
+            background: #0a0a0a;
+        }
+        .concept-3 .card-preview::before {
+            content: 'Mm';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 8rem;
+            font-weight: 600;
+            color: #fff;
+            opacity: 0.08;
+            letter-spacing: -0.05em;
+        }
+        .concept-3 .card-preview::after {
+            content: '';
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            width: 40px;
+            height: 40px;
+            border: 2px solid #fff;
+            border-radius: 50%;
+            opacity: 0.15;
+        }
+
+        .concept-4 .card-preview {
+            background: linear-gradient(160deg, #3d2b1f 0%, #5a3d2b 50%, #3d2b1f 100%);
+        }
+        .concept-4 .card-preview::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 30 Q15 25 30 30 Q45 35 60 30' stroke='%23c9a96e' stroke-width='0.5' fill='none' opacity='0.1'/%3E%3C/svg%3E");
+            background-size: 60px 60px;
+        }
+        .concept-4 .card-preview::after {
+            content: '🌾';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 3rem;
+            opacity: 0.5;
+        }
+
+        .concept-5 .card-preview {
+            background: linear-gradient(135deg, #1a2332 0%, #0f1922 100%);
+        }
+        .concept-5 .card-preview::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: conic-gradient(
+                #c94040 0deg 72deg,
+                #2e7d4f 72deg 144deg,
+                #c9a96e 144deg 216deg,
+                #2563a0 216deg 288deg,
+                #8b4f8b 288deg 360deg
+            );
+            opacity: 0.25;
+        }
+        .concept-5 .card-preview::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: #1a2332;
+        }
+
+        .card-body {
+            padding: 28px;
+        }
+
+        .card-number {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 0.75rem;
+            letter-spacing: 0.3em;
+            color: var(--warm-gray);
+            margin-bottom: 10px;
+            transition: color 0.3s ease;
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 6px;
+            letter-spacing: 0.03em;
+        }
+
+        .card-subtitle {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 0.9rem;
+            color: var(--gold);
+            font-style: italic;
+            margin-bottom: 14px;
+        }
+
+        .card-desc {
+            font-size: 0.82rem;
+            line-height: 1.8;
+            color: var(--warm-gray);
+            margin-bottom: 20px;
+        }
+
+        .card-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .tag {
+            font-size: 0.7rem;
+            padding: 4px 10px;
+            border: 1px solid rgba(201, 169, 110, 0.2);
+            color: var(--gold);
+            letter-spacing: 0.08em;
+            border-radius: 1px;
+        }
+
+        .card-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-top: 16px;
+            border-top: 1px solid rgba(201, 169, 110, 0.1);
+        }
+
+        .card-cta {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 0.85rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--cream);
+        }
+
+        .card-arrow {
+            font-size: 1.2rem;
+            opacity: 0.5;
+            transition: all 0.3s ease;
+            color: var(--gold);
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 40px 20px 60px;
+            border-top: 1px solid rgba(201, 169, 110, 0.1);
+        }
+
+        .footer p {
+            font-size: 0.75rem;
+            color: var(--warm-gray);
+            letter-spacing: 0.1em;
+        }
+
+        /* Responsive */
+        @media (max-width: 720px) {
+            .concepts {
+                grid-template-columns: 1fr;
+                padding: 0 16px 60px;
+            }
+            .header {
+                padding: 60px 16px 30px;
+            }
+            .card-preview {
+                height: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <p class="brand-sub">Prototype Showcase</p>
+        <h1 class="brand-name" id="brandName"></h1>
+        <p class="tagline">명장이 만든 품위 있는 빵, 다섯 가지 시선으로</p>
+    </header>
+
+    <div class="divider">
+        <span class="divider-line"></span>
+        <span class="divider-diamond"></span>
+        <span class="divider-line"></span>
+    </div>
+
+    <section class="intro">
+        <p>
+            같은 브랜드, 다른 감성.<br>
+            다섯 가지 디자인 컨셉으로 명장시대의<br>
+            웹사이트를 프로토타이핑했습니다.<br>
+            각 컨셉을 클릭하여 비교해 보세요.
+        </p>
+    </section>
+
+    <main class="concepts">
+        <a href="concept1-art-deco/index.html" class="concept-card concept-1">
+            <div class="card-preview"></div>
+            <div class="card-body">
+                <p class="card-number">CONCEPT 01</p>
+                <h2 class="card-title">아르데코 럭셔리</h2>
+                <p class="card-subtitle">Art Deco Luxury</p>
+                <p class="card-desc">1920년대 파리 살롱에서 영감을 받은 기하학적 금박 패턴과 극적인 타이포그래피. 명장의 격을 아르데코의 우아함으로 표현합니다.</p>
+                <div class="card-tags">
+                    <span class="tag">금박 패턴</span>
+                    <span class="tag">기하학</span>
+                    <span class="tag">극적 연출</span>
+                </div>
+                <div class="card-footer">
+                    <span class="card-cta">View Concept</span>
+                    <span class="card-arrow">→</span>
+                </div>
+            </div>
+        </a>
+
+        <a href="concept2-japanese-minimal/index.html" class="concept-card concept-2">
+            <div class="card-preview"></div>
+            <div class="card-body">
+                <p class="card-number">CONCEPT 02</p>
+                <h2 class="card-title">와비사비 미니멀</h2>
+                <p class="card-subtitle">Japanese Minimalism</p>
+                <p class="card-desc">여백의 미와 자연스러운 질감. 도자기 위에 놓인 빵처럼, 불완전함 속의 아름다움을 담은 절제된 디자인입니다.</p>
+                <div class="card-tags">
+                    <span class="tag">여백</span>
+                    <span class="tag">자연 질감</span>
+                    <span class="tag">절제미</span>
+                </div>
+                <div class="card-footer">
+                    <span class="card-cta">View Concept</span>
+                    <span class="card-arrow">→</span>
+                </div>
+            </div>
+        </a>
+
+        <a href="concept3-editorial/index.html" class="concept-card concept-3">
+            <div class="card-preview"></div>
+            <div class="card-body">
+                <p class="card-number">CONCEPT 03</p>
+                <h2 class="card-title">에디토리얼 매거진</h2>
+                <p class="card-subtitle">Editorial Magazine</p>
+                <p class="card-desc">하이엔드 매거진의 대담한 타이포그래피와 에디토리얼 레이아웃. 빵을 예술 작품처럼 소개하는 감각적 경험입니다.</p>
+                <div class="card-tags">
+                    <span class="tag">타이포그래피</span>
+                    <span class="tag">대담한 레이아웃</span>
+                    <span class="tag">흑백 대비</span>
+                </div>
+                <div class="card-footer">
+                    <span class="card-cta">View Concept</span>
+                    <span class="card-arrow">→</span>
+                </div>
+            </div>
+        </a>
+
+        <a href="concept4-warm-artisan/index.html" class="concept-card concept-4">
+            <div class="card-preview"></div>
+            <div class="card-body">
+                <p class="card-number">CONCEPT 04</p>
+                <h2 class="card-title">따뜻한 장인</h2>
+                <p class="card-subtitle">Warm Artisan</p>
+                <p class="card-desc">나무결과 밀가루의 질감, 오븐의 온기. 손으로 빚은 정성이 느껴지는 따뜻하고 소박한 장인의 공방을 표현합니다.</p>
+                <div class="card-tags">
+                    <span class="tag">나무결 텍스처</span>
+                    <span class="tag">핸드메이드</span>
+                    <span class="tag">따뜻한 톤</span>
+                </div>
+                <div class="card-footer">
+                    <span class="card-cta">View Concept</span>
+                    <span class="card-arrow">→</span>
+                </div>
+            </div>
+        </a>
+
+        <a href="concept5-modern-korean/index.html" class="concept-card concept-5">
+            <div class="card-preview"></div>
+            <div class="card-body">
+                <p class="card-number">CONCEPT 05</p>
+                <h2 class="card-title">모던 코리안</h2>
+                <p class="card-subtitle">Modern Korean</p>
+                <p class="card-desc">단청의 오방색과 한국 전통 문양을 현대적으로 재해석. 한국의 명장이라는 정체성을 강렬하게 드러내는 디자인입니다.</p>
+                <div class="card-tags">
+                    <span class="tag">오방색</span>
+                    <span class="tag">전통 문양</span>
+                    <span class="tag">현대적 재해석</span>
+                </div>
+                <div class="card-footer">
+                    <span class="card-cta">View Concept</span>
+                    <span class="card-arrow">→</span>
+                </div>
+            </div>
+        </a>
+    </main>
+
+    <footer class="footer">
+        <p>명장시대 — 프로토타입 쇼케이스 2026</p>
+    </footer>
+
+    <script>
+        // Animate brand name characters
+        const brandName = document.getElementById('brandName');
+        const chars = '명장시대'.split('');
+        chars.forEach((char, i) => {
+            const span = document.createElement('span');
+            span.textContent = char;
+            span.style.animationDelay = `${0.3 + i * 0.12}s`;
+            brandName.appendChild(span);
+        });
+
+        // Intersection Observer for cards
+        const cards = document.querySelectorAll('.concept-card');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry, index) => {
+                if (entry.isIntersecting) {
+                    const card = entry.target;
+                    const delay = Array.from(cards).indexOf(card) * 120;
+                    setTimeout(() => {
+                        card.classList.add('visible');
+                        card.style.transition = `all 0.7s cubic-bezier(0.23, 1, 0.32, 1) ${delay}ms`;
+                    }, 100);
+                    observer.unobserve(card);
+                }
+            });
+        }, { threshold: 0.1 });
+
+        cards.forEach(card => observer.observe(card));
+    </script>
+</body>
+</html>

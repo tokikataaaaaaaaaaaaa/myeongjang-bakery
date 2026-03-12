@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>명장시대 — 빵, 그 본연의 맛</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600;700;800&family=Noto+Serif+KR:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --warm-white: #faf8f4;
+            --stone: #9e9689;
+            --charcoal: #3a352f;
+            --sand: #d4cdc0;
+            --beige: #e8e2d8;
+            --light-stone: #b8b1a6;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            font-size: 16px;
+        }
+
+        body {
+            background: var(--warm-white);
+            color: var(--charcoal);
+            font-family: 'Noto Serif KR', serif;
+            font-weight: 300;
+            line-height: 1.9;
+            min-height: 100vh;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Paper / linen texture overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0.025;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+            background-repeat: repeat;
+            background-size: 256px 256px;
+        }
+
+        /* Scroll fade elements */
+        .fade-in {
+            opacity: 0;
+            transition: opacity 1.2s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+        }
+
+        .fade-in-slow {
+            opacity: 0;
+            transition: opacity 2s ease;
+        }
+
+        .fade-in-slow.visible {
+            opacity: 1;
+        }
+
+        /* ==================== */
+        /* BACK BUTTON          */
+        /* ==================== */
+        .back-button {
+            position: fixed;
+            top: 2rem;
+            left: 2rem;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            color: var(--stone);
+            font-family: 'Noto Serif KR', serif;
+            font-weight: 300;
+            font-size: 0.8rem;
+            letter-spacing: 0.05em;
+            transition: color 0.5s ease;
+            padding: 0.5rem;
+        }
+
+        .back-button:hover {
+            color: var(--charcoal);
+        }
+
+        .back-button svg {
+            width: 16px;
+            height: 16px;
+            stroke: currentColor;
+            transition: transform 0.4s ease;
+        }
+
+        .back-button:hover svg {
+            transform: translateX(-3px);
+        }
+
+        /* ==================== */
+        /* HERO SECTION         */
+        /* ==================== */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 4rem 2rem;
+            position: relative;
+        }
+
+        .hero-title {
+            font-family: 'Shippori Mincho', serif;
+            font-weight: 400;
+            font-size: clamp(3rem, 8vw, 7rem);
+            letter-spacing: 0.15em;
+            color: var(--charcoal);
+            margin-bottom: 3rem;
+        }
+
+        .hero-line {
+            width: 80px;
+            height: 1px;
+            background: var(--sand);
+            margin-bottom: 3rem;
+        }
+
+        .hero-tagline {
+            font-family: 'Noto Serif KR', serif;
+            font-weight: 200;
+            font-size: clamp(0.9rem, 2vw, 1.15rem);
+            color: var(--stone);
+            letter-spacing: 0.3em;
+        }
+
+        /* Single dot decoration */
+        .hero-dot {
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: var(--sand);
+            margin-top: 4rem;
+        }
+
+        /* Scroll hint */
+        .scroll-hint {
+            position: absolute;
+            bottom: 3rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--sand);
+            font-size: 0.65rem;
+            letter-spacing: 0.2em;
+            opacity: 0;
+            animation: scrollHintFade 1.5s ease 2s forwards;
+        }
+
+        .scroll-hint-line {
+            width: 1px;
+            height: 30px;
+            background: var(--sand);
+            animation: scrollPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes scrollHintFade {
+            to { opacity: 1; }
+        }
+
+        @keyframes scrollPulse {
+            0%, 100% { opacity: 0.3; transform: scaleY(0.5); transform-origin: top; }
+            50% { opacity: 1; transform: scaleY(1); transform-origin: top; }
+        }
+
+        /* ==================== */
+        /* ABOUT SECTION        */
+        /* ==================== */
+        .about {
+            padding: 10rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            position: relative;
+        }
+
+        .about-text {
+            padding-right: 2rem;
+        }
+
+        .section-label {
+            font-family: 'Shippori Mincho', serif;
+            font-weight: 400;
+            font-size: 0.7rem;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: var(--stone);
+            margin-bottom: 2.5rem;
+        }
+
+        .about-name {
+            font-family: 'Shippori Mincho', serif;
+            font-weight: 500;
+            font-size: clamp(1.8rem, 3vw, 2.4rem);
+            color: var(--charcoal);
+            margin-bottom: 0.5rem;
+            letter-spacing: 0.05em;
+        }
+
+        .about-title {
+            font-weight: 300;
+            font-size: 0.85rem;
+            color: var(--stone);
+            margin-bottom: 2.5rem;
+            letter-spacing: 0.05em;
+        }
+
+        .about-body {
+            font-weight: 300;
+            font-size: 0.95rem;
+            color: var(--charcoal);
+            line-height: 2.2;
+            opacity: 0.85;
+        }
+
+        /* Ink wash decoration — CSS radial gradient */
+        .about-decoration {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 300px;
+        }
+
+        .ink-wash {
+            width: 280px;
+            height: 280px;
+            border-radius: 62% 38% 46% 54% / 60% 44% 56% 40%;
+            background: radial-gradient(
+                ellipse at 40% 40%,
+                var(--sand) 0%,
+                var(--beige) 40%,
+                transparent 70%
+            );
+            opacity: 0.5;
+            position: relative;
+        }
+
+        .ink-wash::after {
+            content: '';
+            position: absolute;
+            top: 20%;
+            left: 20%;
+            width: 60%;
+            height: 60%;
+            border-radius: 55% 45% 50% 50% / 45% 55% 45% 55%;
+            background: radial-gradient(
+                ellipse at 50% 50%,
+                var(--sand) 0%,
+                transparent 60%
+            );
+            opacity: 0.6;
+        }
+
+        /* ==================== */
+        /* MENU SECTION         */
+        /* ==================== */
+        .menu {
+            padding: 8rem 2rem 10rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .menu .section-label {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .menu-list {
+            list-style: none;
+        }
+
+        .menu-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            padding: 1.4rem 0;
+            border-bottom: 1px solid var(--beige);
+        }
+
+        .menu-item:first-child {
+            border-top: 1px solid var(--beige);
+        }
+
+        .menu-item-name {
+            font-family: 'Noto Serif KR', serif;
+            font-weight: 400;
+            font-size: 1rem;
+            color: var(--charcoal);
+            letter-spacing: 0.03em;
+        }
+
+        .menu-item-price {
+            font-family: 'Shippori Mincho', serif;
+            font-weight: 400;
+            font-size: 0.9rem;
+            color: var(--stone);
+            letter-spacing: 0.05em;
+            white-space: nowrap;
+            margin-left: 2rem;
+        }
+
+        .menu-item-dots {
+            flex: 1;
+            margin: 0 1rem;
+            border-bottom: 1px dotted var(--sand);
+            min-width: 20px;
+            align-self: center;
+            margin-bottom: 4px;
+        }
+
+        /* ==================== */
+        /* PHILOSOPHY SECTION   */
+        /* ==================== */
+        .philosophy {
+            padding: 10rem 2rem 12rem;
+            max-width: 900px;
+            margin: 0 auto;
+            text-align: center;
+            position: relative;
+        }
+
+        .philosophy .section-label {
+            margin-bottom: 4rem;
+        }
+
+        .philosophy-quote {
+            font-family: 'Shippori Mincho', serif;
+            font-weight: 400;
+            font-size: clamp(1.3rem, 3vw, 2rem);
+            color: var(--charcoal);
+            line-height: 2.2;
+            letter-spacing: 0.05em;
+        }
+
+        .philosophy-attribution {
+            margin-top: 3rem;
+            font-weight: 300;
+            font-size: 0.8rem;
+            color: var(--stone);
+            letter-spacing: 0.15em;
+        }
+
+        /* Decorative thin line */
+        .philosophy-line {
+            width: 1px;
+            height: 60px;
+            background: var(--sand);
+            margin: 4rem auto 0;
+        }
+
+        /* ==================== */
+        /* STORE INFO SECTION   */
+        /* ==================== */
+        .store-info {
+            padding: 8rem 2rem 10rem;
+            max-width: 700px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .store-info .section-label {
+            margin-bottom: 4rem;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2.5rem;
+        }
+
+        .info-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .info-label {
+            font-family: 'Shippori Mincho', serif;
+            font-weight: 400;
+            font-size: 0.7rem;
+            letter-spacing: 0.25em;
+            color: var(--stone);
+            text-transform: uppercase;
+        }
+
+        .info-value {
+            font-family: 'Noto Serif KR', serif;
+            font-weight: 300;
+            font-size: 1rem;
+            color: var(--charcoal);
+            letter-spacing: 0.03em;
+        }
+
+        .info-divider {
+            width: 30px;
+            height: 1px;
+            background: var(--sand);
+            margin: 0 auto;
+        }
+
+        /* ==================== */
+        /* FOOTER               */
+        /* ==================== */
+        .footer {
+            padding: 4rem 2rem;
+            text-align: center;
+            border-top: 1px solid var(--beige);
+        }
+
+        .footer-link {
+            display: inline-block;
+            color: var(--stone);
+            text-decoration: none;
+            font-size: 0.75rem;
+            letter-spacing: 0.2em;
+            font-weight: 300;
+            transition: color 0.5s ease;
+        }
+
+        .footer-link:hover {
+            color: var(--charcoal);
+        }
+
+        .footer-copy {
+            margin-top: 1.5rem;
+            font-size: 0.65rem;
+            color: var(--sand);
+            letter-spacing: 0.1em;
+        }
+
+        /* ==================== */
+        /* RESPONSIVE           */
+        /* ==================== */
+        @media (max-width: 768px) {
+            .back-button {
+                top: 1.2rem;
+                left: 1.2rem;
+            }
+
+            .hero {
+                padding: 6rem 1.5rem;
+            }
+
+            .about {
+                grid-template-columns: 1fr;
+                padding: 6rem 1.5rem;
+                gap: 3rem;
+            }
+
+            .about-text {
+                padding-right: 0;
+                order: 1;
+            }
+
+            .about-decoration {
+                order: 2;
+                min-height: 200px;
+            }
+
+            .ink-wash {
+                width: 180px;
+                height: 180px;
+            }
+
+            .menu {
+                padding: 5rem 1.5rem 6rem;
+            }
+
+            .menu .section-label {
+                margin-bottom: 2.5rem;
+            }
+
+            .menu-item {
+                padding: 1.1rem 0;
+            }
+
+            .menu-item-dots {
+                display: none;
+            }
+
+            .menu-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.3rem;
+            }
+
+            .menu-item-price {
+                margin-left: 0;
+            }
+
+            .philosophy {
+                padding: 6rem 1.5rem 8rem;
+            }
+
+            .store-info {
+                padding: 5rem 1.5rem 6rem;
+            }
+
+            .scroll-hint {
+                bottom: 2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-title {
+                letter-spacing: 0.08em;
+            }
+
+            .about-name {
+                font-size: 1.5rem;
+            }
+
+            .philosophy-quote {
+                font-size: 1.1rem;
+                line-height: 2;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Back Button -->
+    <a href="../index.html" class="back-button" aria-label="Back to concepts">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+        <span>돌아가기</span>
+    </a>
+
+    <!-- Hero -->
+    <section class="hero">
+        <h1 class="hero-title fade-in-slow">명장시대</h1>
+        <div class="hero-line fade-in"></div>
+        <p class="hero-tagline fade-in">빵, 그 본연의 맛</p>
+        <div class="hero-dot fade-in"></div>
+
+        <div class="scroll-hint">
+            <div class="scroll-hint-line"></div>
+        </div>
+    </section>
+
+    <!-- About -->
+    <section class="about">
+        <div class="about-text fade-in">
+            <p class="section-label">장인</p>
+            <h2 class="about-name">김영수 명장</h2>
+            <p class="about-title">대한민국 제과명장 &middot; 35년 경력</p>
+            <p class="about-body">
+                밀가루에 손을 대는 순간, 시간이 멈춥니다.
+                35년이라는 세월은 기술이 아닌 감각을 만들었고,
+                그 감각은 빵 하나하나에 고요히 스며들어 있습니다.
+                화려하지 않되, 오래 기억에 남는 맛.
+                그것이 명장의 빵입니다.
+            </p>
+        </div>
+        <div class="about-decoration fade-in-slow">
+            <div class="ink-wash"></div>
+        </div>
+    </section>
+
+    <!-- Menu -->
+    <section class="menu">
+        <p class="section-label fade-in">시그니처</p>
+        <ul class="menu-list">
+            <li class="menu-item fade-in">
+                <span class="menu-item-name">크루아상 클래식</span>
+                <span class="menu-item-dots"></span>
+                <span class="menu-item-price">&#8361;5,500</span>
+            </li>
+            <li class="menu-item fade-in">
+                <span class="menu-item-name">바게트 트라디시옹</span>
+                <span class="menu-item-dots"></span>
+                <span class="menu-item-price">&#8361;7,000</span>
+            </li>
+            <li class="menu-item fade-in">
+                <span class="menu-item-name">브리오슈 도레</span>
+                <span class="menu-item-dots"></span>
+                <span class="menu-item-price">&#8361;6,500</span>
+            </li>
+            <li class="menu-item fade-in">
+                <span class="menu-item-name">깜빠뉴</span>
+                <span class="menu-item-dots"></span>
+                <span class="menu-item-price">&#8361;9,000</span>
+            </li>
+            <li class="menu-item fade-in">
+                <span class="menu-item-name">호밀 사워도우</span>
+                <span class="menu-item-dots"></span>
+                <span class="menu-item-price">&#8361;8,500</span>
+            </li>
+            <li class="menu-item fade-in">
+                <span class="menu-item-name">명장 식빵</span>
+                <span class="menu-item-dots"></span>
+                <span class="menu-item-price">&#8361;12,000</span>
+            </li>
+        </ul>
+    </section>
+
+    <!-- Philosophy -->
+    <section class="philosophy">
+        <p class="section-label fade-in">철학</p>
+        <blockquote class="philosophy-quote fade-in-slow">
+            하루의 시작은<br>
+            밀가루와 물,<br>
+            그리고 시간의 조화입니다.
+        </blockquote>
+        <p class="philosophy-attribution fade-in">&mdash; 김영수 명장</p>
+        <div class="philosophy-line fade-in"></div>
+    </section>
+
+    <!-- Store Info -->
+    <section class="store-info">
+        <p class="section-label fade-in">안내</p>
+        <div class="info-grid">
+            <div class="info-item fade-in">
+                <span class="info-label">Address</span>
+                <span class="info-value">서울시 강남구 도산대로 123</span>
+            </div>
+            <div class="info-divider fade-in"></div>
+            <div class="info-item fade-in">
+                <span class="info-label">Hours</span>
+                <span class="info-value">08:00 &mdash; 21:00</span>
+            </div>
+            <div class="info-divider fade-in"></div>
+            <div class="info-item fade-in">
+                <span class="info-label">Phone</span>
+                <span class="info-value">02-1234-5678</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <a href="../index.html" class="footer-link">모든 컨셉 보기</a>
+        <p class="footer-copy">&copy; 2026 명장시대</p>
+    </footer>
+
+    <script>
+        // Scroll-based fade-in observer
+        document.addEventListener('DOMContentLoaded', function () {
+            var fadeElements = document.querySelectorAll('.fade-in, .fade-in-slow');
+
+            // Make hero elements visible on load
+            var heroFades = document.querySelectorAll('.hero .fade-in, .hero .fade-in-slow');
+            heroFades.forEach(function (el, index) {
+                setTimeout(function () {
+                    el.classList.add('visible');
+                }, 300 + index * 400);
+            });
+
+            // IntersectionObserver for scroll-triggered fades
+            if ('IntersectionObserver' in window) {
+                var observer = new IntersectionObserver(function (entries) {
+                    entries.forEach(function (entry) {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('visible');
+                            observer.unobserve(entry.target);
+                        }
+                    });
+                }, {
+                    threshold: 0.15,
+                    rootMargin: '0px 0px -50px 0px'
+                });
+
+                fadeElements.forEach(function (el) {
+                    // Skip hero elements (already handled)
+                    if (!el.closest('.hero')) {
+                        observer.observe(el);
+                    }
+                });
+            } else {
+                // Fallback: show all elements
+                fadeElements.forEach(function (el) {
+                    el.classList.add('visible');
+                });
+            }
+        });
+    </script>
+</body>
+</html>
