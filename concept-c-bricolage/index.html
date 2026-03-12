@@ -15,11 +15,13 @@
         }
 
         :root {
-            --cream: #faf8f3;
-            --black: #1a1a1a;
-            --gray: #999;
-            --light-gray: #ccc;
-            --border: rgba(26, 26, 26, 0.08);
+            --cream: #f3ebe0;
+            --black: #2a1f17;
+            --gray: #7a6e63;
+            --light-gray: #c4b5a5;
+            --gold: #b8963e;
+            --warm-white: #f9f3eb;
+            --border: rgba(42, 31, 23, 0.1);
         }
 
         html {
@@ -52,7 +54,7 @@
             font-weight: 400;
             letter-spacing: 0.35em;
             text-transform: uppercase;
-            color: var(--gray);
+            color: var(--gold);
             margin-bottom: 2rem;
         }
 
@@ -105,7 +107,7 @@
         }
 
         .site-header.scrolled {
-            background: rgba(250, 248, 243, 0.9);
+            background: rgba(243, 235, 224, 0.92);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             border-bottom-color: var(--border);
@@ -305,7 +307,7 @@
             display: block;
             width: 1px;
             height: 40px;
-            background: #fff;
+            background: #f3ebe0;
             margin: 0 auto;
             animation: scrollPulse 2s ease-in-out infinite;
         }
@@ -532,7 +534,7 @@
             font-size: 0.85rem;
             font-weight: 400;
             letter-spacing: 0.05em;
-            color: var(--black);
+            color: var(--gold);
         }
 
         /* ==================== */
@@ -636,6 +638,7 @@
             border-top: 1px solid var(--border);
             max-width: 1100px;
             margin: 0 auto;
+            background: var(--cream);
         }
 
         .footer-top {

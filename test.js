@@ -137,7 +137,7 @@ assert(bricolageHtml.includes('Cormorant Garamond'), 'Bricolage: Cormorant Garam
 assert(bricolageHtml.includes('Noto Serif KR'), 'Bricolage: Noto Serif KR 폰트 사용');
 
 // Bricolage design: cream background color
-assert(bricolageHtml.includes('#faf8f3') || bricolageHtml.includes('faf8f3'), 'Bricolage: 크림 배경색 #faf8f3');
+assert(bricolageHtml.includes('#f3ebe0') || bricolageHtml.includes('f3ebe0'), 'Bricolage: 크림 배경색 #f3ebe0');
 
 // Fixed header
 assert(bricolageHtml.includes('position: fixed') || bricolageHtml.includes('position:fixed'), 'Bricolage: 고정 헤더');
