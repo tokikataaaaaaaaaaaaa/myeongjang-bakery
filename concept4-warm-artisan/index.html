@@ -1365,9 +1365,245 @@
                 align-items: center;
             }
         }
+
+        /* ============================================================
+           INTERACTIVE ENHANCEMENTS
+        ============================================================ */
+
+        /* --- 1. Hero Ken Burns Effect --- */
+        .hero-bg-image img {
+            animation: ken-burns 20s ease-in-out infinite alternate;
+            will-change: transform;
+        }
+
+        @keyframes ken-burns {
+            0% {
+                transform: scale(1) translate(0, 0);
+            }
+            100% {
+                transform: scale(1.08) translate(-1.5%, -1%);
+            }
+        }
+
+        /* Hero parallax content wrapper */
+        .hero-content-parallax {
+            position: relative;
+            z-index: 2;
+            will-change: transform;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        /* --- 2. Bread Card 3D Tilt & Glow --- */
+        .bread-card {
+            position: relative;
+            transform-style: preserve-3d;
+            will-change: transform, box-shadow;
+        }
+
+        .bread-card .bread-glow-overlay {
+            position: absolute;
+            inset: 0;
+            border-radius: 18px;
+            background: radial-gradient(circle at var(--glow-x, 50%) var(--glow-y, 50%), rgba(212, 168, 67, 0.25), transparent 70%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .bread-card:hover .bread-glow-overlay {
+            opacity: 1;
+        }
+
+        .bread-card .bread-img-inner {
+            transition: transform 0.6s ease;
+        }
+
+        .bread-card:hover .bread-img-inner {
+            transform: scale(1.1);
+        }
+
+        /* --- 3. Process Section Bounce-In --- */
+        .process-step.bounce-ready {
+            opacity: 0;
+            transform: translateY(50px) scale(0.9);
+        }
+
+        .process-step.bounce-in {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            transition: opacity 0.6s cubic-bezier(0.34, 1.56, 0.64, 1),
+                        transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        /* Hide original static connecting line (replaced by animated version) */
+        .process-timeline::before {
+            display: none !important;
+        }
+
+        /* Connecting dashed line draw animation */
+        .process-line-draw {
+            position: absolute;
+            top: 55px;
+            left: 12.5%;
+            right: 12.5%;
+            height: 2px;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .process-line-draw-inner {
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                90deg,
+                var(--terracotta) 0,
+                var(--terracotta) 8px,
+                transparent 8px,
+                transparent 14px
+            );
+            opacity: 0.5;
+            transform: scaleX(0);
+            transform-origin: left center;
+            transition: transform 1.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .process-line-draw-inner.drawn {
+            transform: scaleX(1);
+        }
+
+        /* Process icon pulsing glow */
+        @keyframes icon-glow-pulse {
+            0%, 100% {
+                box-shadow:
+                    0 4px 16px var(--shadow-warm),
+                    0 0 0 rgba(212, 168, 67, 0),
+                    inset 0 -2px 6px rgba(42, 26, 15, 0.05),
+                    inset 0 2px 4px rgba(255, 255, 255, 0.8);
+            }
+            50% {
+                box-shadow:
+                    0 4px 16px var(--shadow-warm),
+                    0 0 20px rgba(212, 168, 67, 0.3),
+                    inset 0 -2px 6px rgba(42, 26, 15, 0.05),
+                    inset 0 2px 4px rgba(255, 255, 255, 0.8);
+            }
+        }
+
+        .step-icon.glowing {
+            animation: icon-glow-pulse 2.5s ease-in-out infinite;
+        }
+
+        /* --- 4. Counter Animation --- */
+        .stat-number[data-count-to] {
+            display: inline-block;
+            min-width: 2ch;
+        }
+
+        /* --- 5. Flour Particles (enhanced via JS) --- */
+
+        /* --- 6. Timeline Cascade --- */
+        .timeline-item.slide-from-left {
+            opacity: 0;
+            transform: translateX(-60px);
+            transition: opacity 0.6s cubic-bezier(0.34, 1.56, 0.64, 1),
+                        transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .timeline-item.slide-from-right {
+            opacity: 0;
+            transform: translateX(60px);
+            transition: opacity 0.6s cubic-bezier(0.34, 1.56, 0.64, 1),
+                        transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .timeline-item.slide-from-left.slid-in,
+        .timeline-item.slide-from-right.slid-in {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* Timeline dot pulse on enter */
+        @keyframes timeline-dot-pulse {
+            0% {
+                box-shadow: 0 0 0 2px rgba(184, 111, 76, 0.3);
+            }
+            50% {
+                box-shadow: 0 0 0 6px rgba(184, 111, 76, 0.15), 0 0 16px rgba(184, 111, 76, 0.3);
+            }
+            100% {
+                box-shadow: 0 0 0 2px rgba(184, 111, 76, 0.3);
+            }
+        }
+
+        .timeline-item.dot-pulse::before {
+            animation: timeline-dot-pulse 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) 1;
+        }
+
+        /* --- 7. Scroll Progress Bar --- */
+        .scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--wheat-gold), var(--terracotta));
+            z-index: 300;
+            transition: width 0.05s linear;
+            box-shadow: 0 0 8px rgba(212, 168, 67, 0.4);
+        }
+
+        /* --- 8. Image Reveal on Scroll --- */
+        .image-reveal-wrap {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .image-reveal-wrap::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, var(--wheat-gold), var(--terracotta));
+            z-index: 5;
+            transform: scaleX(1);
+            transform-origin: right center;
+            transition: transform 0.9s cubic-bezier(0.34, 1.56, 0.64, 1);
+            pointer-events: none;
+        }
+
+        .image-reveal-wrap.revealed::before {
+            transform: scaleX(0);
+        }
+
+        /* ============================================================
+           RESPONSIVE — Interactive Enhancements
+        ============================================================ */
+        @media (max-width: 768px) {
+            /* Disable process line draw on mobile (vertical layout) */
+            .process-line-draw {
+                display: none;
+            }
+
+            /* Simplify timeline cascade to vertical only */
+            .timeline-item.slide-from-left,
+            .timeline-item.slide-from-right {
+                transform: translateY(40px);
+            }
+
+            .timeline-item.slide-from-left.slid-in,
+            .timeline-item.slide-from-right.slid-in {
+                transform: translateY(0);
+            }
+        }
     </style>
 </head>
 <body>
+
+<!-- Scroll Progress Bar -->
+<div class="scroll-progress" id="scrollProgress"></div>
 
 <!-- Flour Dust Particles -->
 <div class="flour-particles" id="flourParticles"></div>
@@ -1413,7 +1649,7 @@
 ============================================================ -->
 <section class="hero" id="hero">
     <!-- Hero background image with warm overlay -->
-    <div class="hero-bg-image">
+    <div class="hero-bg-image image-reveal-wrap">
         <img src="https://images.unsplash.com/photo-1517433670267-08bbd4be890f?w=1200&h=800&fit=crop&q=80" alt="Warm bakery display" loading="lazy">
     </div>
 
@@ -1449,9 +1685,11 @@
         <ellipse cx="50" cy="90" rx="9" ry="12" fill="#3d2b1f" opacity="0.1" transform="rotate(-8 50 90)"/>
     </svg>
 
-    <span class="hero-badge fade-up">Artisan Bakery Since 1991</span>
-    <h1 class="hero-title fade-up">명장시대</h1>
-    <p class="hero-tagline fade-up">정성을 담아 구운 하루</p>
+    <div class="hero-content-parallax" id="heroContent">
+        <span class="hero-badge fade-up">Artisan Bakery Since 1991</span>
+        <h1 class="hero-title fade-up">명장시대</h1>
+        <p class="hero-tagline fade-up">정성을 담아 구운 하루</p>
+    </div>
 
     <div class="hero-scroll-hint">
         <span>SCROLL</span>
@@ -1475,7 +1713,9 @@
             <svg class="wavy-divider" viewBox="0 0 120 12" fill="none">
                 <path d="M0 6 Q15 0 30 6 T60 6 T90 6 T120 6" stroke="#b86f4c" stroke-width="1.5" fill="none" opacity="0.4"/>
             </svg>
-            <img class="baker-portrait" src="https://images.unsplash.com/photo-1600565193348-f74bd3c7ccdf?w=600&q=80" alt="김영수 명장 - Master Baker" loading="lazy">
+            <div class="image-reveal-wrap" style="width: 160px; height: 160px; border-radius: 50%; margin: 0 auto 1.5rem; overflow: hidden;">
+                <img class="baker-portrait" src="https://images.unsplash.com/photo-1600565193348-f74bd3c7ccdf?w=600&q=80" alt="김영수 명장 - Master Baker" loading="lazy" style="margin: 0;">
+            </div>
 
             <p class="baker-philosophy">
                 "좋은 빵은 정직한 재료와 충분한 시간, 그리고 장인의 손끝에서 태어납니다."
@@ -1507,9 +1747,9 @@
             <p>
                 "좋은 빵은 기다림에서 태어납니다. 서두르지 않고, 반죽이 스스로 이야기할 때까지 기다려야 합니다."
             </p>
-            <div class="master-stats">
+            <div class="master-stats" id="masterStats">
                 <div class="stat-item">
-                    <span class="stat-number">35</span>
+                    <span class="stat-number" data-count-to="35" data-count-suffix="년">0년</span>
                     <span class="stat-label">Years of Craft</span>
                 </div>
                 <div class="stat-item">
@@ -1517,7 +1757,7 @@
                     <span class="stat-label">Le Cordon Bleu</span>
                 </div>
                 <div class="stat-item">
-                    <span class="stat-number">명장</span>
+                    <span class="stat-number" data-count-to="47" data-count-prefix="제" data-count-suffix="호">제0호</span>
                     <span class="stat-label">Master Baker</span>
                 </div>
             </div>
@@ -1588,7 +1828,7 @@
         <div class="bread-grid">
             <!-- Bread 1 -->
             <div class="bread-card fade-up">
-                <div class="bread-img bread-img-1">
+                <div class="bread-img image-reveal-wrap bread-img-1">
                     <div class="bread-img-inner">
                         <img src="https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=400&h=300&fit=crop&q=80" alt="크루아상 클래식" loading="lazy">
                     </div>
@@ -1603,7 +1843,7 @@
 
             <!-- Bread 2 -->
             <div class="bread-card fade-up">
-                <div class="bread-img bread-img-2">
+                <div class="bread-img image-reveal-wrap bread-img-2">
                     <div class="bread-img-inner">
                         <img src="https://images.unsplash.com/photo-1568471173242-461f0a730452?w=400&h=300&fit=crop&q=80" alt="바게트 트라디시옹" loading="lazy">
                     </div>
@@ -1618,7 +1858,7 @@
 
             <!-- Bread 3 -->
             <div class="bread-card fade-up">
-                <div class="bread-img bread-img-3">
+                <div class="bread-img image-reveal-wrap bread-img-3">
                     <div class="bread-img-inner">
                         <img src="https://images.unsplash.com/photo-1608198093002-ad4e005484ec?w=400&h=300&fit=crop&q=80" alt="브리오슈 도레" loading="lazy">
                     </div>
@@ -1633,7 +1873,7 @@
 
             <!-- Bread 4 -->
             <div class="bread-card fade-up">
-                <div class="bread-img bread-img-4">
+                <div class="bread-img image-reveal-wrap bread-img-4">
                     <div class="bread-img-inner">
                         <img src="https://images.unsplash.com/photo-1586444248902-2f64eddc13df?w=400&h=300&fit=crop&q=80" alt="깜빠뉴" loading="lazy">
                     </div>
@@ -1648,7 +1888,7 @@
 
             <!-- Bread 5 -->
             <div class="bread-card fade-up">
-                <div class="bread-img bread-img-5">
+                <div class="bread-img image-reveal-wrap bread-img-5">
                     <div class="bread-img-inner">
                         <img src="https://images.unsplash.com/photo-1509440159596-0249088772ff?w=400&h=300&fit=crop&q=80" alt="호밀 사워도우" loading="lazy">
                     </div>
@@ -1663,7 +1903,7 @@
 
             <!-- Bread 6 -->
             <div class="bread-card fade-up">
-                <div class="bread-img bread-img-6">
+                <div class="bread-img image-reveal-wrap bread-img-6">
                     <div class="bread-img-inner">
                         <img src="https://images.unsplash.com/photo-1549931319-a545dcf3bc73?w=400&h=300&fit=crop&q=80" alt="명장 식빵" loading="lazy">
                     </div>
@@ -1684,7 +1924,7 @@
 ============================================================ -->
 <section class="process" id="process">
     <!-- Process section background image -->
-    <div class="process-bg-image">
+    <div class="process-bg-image image-reveal-wrap">
         <img src="https://images.unsplash.com/photo-1568254183919-78a4f43a2877?w=1200&h=600&fit=crop&q=80" alt="Bakery workshop" loading="lazy">
     </div>
     <div class="container">
@@ -1694,7 +1934,9 @@
             <path d="M0 6 Q15 0 30 6 T60 6 T90 6 T120 6" stroke="#b86f4c" stroke-width="1.5" fill="none" opacity="0.4"/>
         </svg>
 
-        <div class="process-timeline">
+        <div class="process-timeline" id="processTimeline">
+            <!-- Animated connecting line -->
+            <div class="process-line-draw"><div class="process-line-draw-inner" id="processLineDraw"></div></div>
             <!-- Step 1: 반죽 (Mixing) -->
             <div class="process-step fade-up">
                 <div class="step-icon">
@@ -1926,38 +2168,85 @@
 (function() {
     'use strict';
 
-    // --- Flour dust particles ---
-    const particleContainer = document.getElementById('flourParticles');
-    const particleCount = 25;
+    // --- Detect mobile for disabling tilt ---
+    var isMobile = window.matchMedia('(max-width: 768px)').matches || 'ontouchstart' in window;
 
-    for (let i = 0; i < particleCount; i++) {
-        const dot = document.createElement('div');
+    // --- Flour dust particles (enhanced with more particles + mouse repel) ---
+    var particleContainer = document.getElementById('flourParticles');
+    var particleCount = isMobile ? 30 : 40;
+    var flourDots = [];
+    var mouseX = -9999, mouseY = -9999;
+
+    for (var i = 0; i < particleCount; i++) {
+        var dot = document.createElement('div');
         dot.className = 'flour-dot';
-        const size = Math.random() * 3 + 1.5;
-        const left = Math.random() * 100;
-        const dur = Math.random() * 15 + 10;
-        const delay = Math.random() * -20;
-        const drift = (Math.random() - 0.5) * 120;
+        var size = Math.random() * 5 + 1.5;
+        var left = Math.random() * 100;
+        var dur = Math.random() * 15 + 10;
+        var delay = Math.random() * -20;
+        var drift = (Math.random() - 0.5) * 120;
+        var opacityVar = 0.3 + Math.random() * 0.5;
 
         dot.style.setProperty('--size', size + 'px');
         dot.style.setProperty('--dur', dur + 's');
         dot.style.setProperty('--delay', delay + 's');
         dot.style.setProperty('--drift', drift + 'px');
         dot.style.left = left + '%';
+        dot.style.opacity = opacityVar;
 
         particleContainer.appendChild(dot);
+        flourDots.push({ el: dot, offsetX: 0, offsetY: 0 });
+    }
+
+    // Mouse repel effect for flour particles
+    document.addEventListener('mousemove', function(e) {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+    });
+
+    function animateParticleRepel() {
+        var repelRadius = 120;
+        var repelStrength = 40;
+        flourDots.forEach(function(p) {
+            var rect = p.el.getBoundingClientRect();
+            var px = rect.left + rect.width / 2;
+            var py = rect.top + rect.height / 2;
+            var dx = px - mouseX;
+            var dy = py - mouseY;
+            var dist = Math.sqrt(dx * dx + dy * dy);
+
+            if (dist < repelRadius && dist > 0) {
+                var force = (1 - dist / repelRadius) * repelStrength;
+                p.offsetX += (dx / dist) * force * 0.15;
+                p.offsetY += (dy / dist) * force * 0.15;
+            }
+
+            // Dampen back to original position
+            p.offsetX *= 0.92;
+            p.offsetY *= 0.92;
+
+            if (Math.abs(p.offsetX) > 0.1 || Math.abs(p.offsetY) > 0.1) {
+                p.el.style.marginLeft = p.offsetX + 'px';
+                p.el.style.marginTop = p.offsetY + 'px';
+            }
+        });
+        requestAnimationFrame(animateParticleRepel);
+    }
+
+    if (!isMobile) {
+        requestAnimationFrame(animateParticleRepel);
     }
 
     // --- Scroll-triggered fade-up animations ---
-    const fadeElements = document.querySelectorAll('.fade-up');
+    var fadeElements = document.querySelectorAll('.fade-up');
 
-    const observerOptions = {
+    var observerOptions = {
         root: null,
         rootMargin: '0px 0px -60px 0px',
         threshold: 0.1
     };
 
-    const observer = new IntersectionObserver(function(entries) {
+    var observer = new IntersectionObserver(function(entries) {
         entries.forEach(function(entry) {
             if (entry.isIntersecting) {
                 entry.target.classList.add('visible');
@@ -1971,25 +2260,229 @@
     });
 
     // --- Stagger animation delay for bread cards ---
-    const breadCards = document.querySelectorAll('.bread-card.fade-up');
+    var breadCards = document.querySelectorAll('.bread-card.fade-up');
     breadCards.forEach(function(card, index) {
         card.style.transitionDelay = (index * 0.1) + 's';
     });
 
-    // --- Stagger animation delay for process steps ---
-    const processSteps = document.querySelectorAll('.process-step.fade-up');
-    processSteps.forEach(function(step, index) {
-        step.style.transitionDelay = (index * 0.15) + 's';
+    // --- 1. Hero Parallax on Scroll ---
+    var heroContent = document.getElementById('heroContent');
+    var heroSection = document.querySelector('.hero');
+    var heroBgImage = heroSection ? heroSection.querySelector('.hero-bg-image') : null;
+
+    function handleParallax() {
+        var scrollY = window.pageYOffset || document.documentElement.scrollTop;
+        var heroHeight = heroSection ? heroSection.offsetHeight : 0;
+
+        if (scrollY < heroHeight && heroContent) {
+            // Content moves faster (parallax feel)
+            var contentOffset = scrollY * 0.35;
+            heroContent.style.transform = 'translateY(' + contentOffset + 'px)';
+
+            // Background moves slower
+            if (heroBgImage) {
+                var bgOffset = scrollY * 0.15;
+                heroBgImage.style.transform = 'translateY(' + bgOffset + 'px)';
+            }
+        }
+    }
+
+    // --- 2. Bread Card 3D Tilt (mouse position based) ---
+    // Inject glow overlay into each bread card
+    var allBreadCards = document.querySelectorAll('.bread-card');
+    allBreadCards.forEach(function(card) {
+        var glow = document.createElement('div');
+        glow.className = 'bread-glow-overlay';
+        card.appendChild(glow);
     });
 
-    // --- Stagger animation delay for timeline items ---
-    const timelineItems = document.querySelectorAll('.timeline-item.fade-up');
+    if (!isMobile) {
+        allBreadCards.forEach(function(card) {
+            card.addEventListener('mousemove', function(e) {
+                var rect = card.getBoundingClientRect();
+                var x = e.clientX - rect.left;
+                var y = e.clientY - rect.top;
+                var centerX = rect.width / 2;
+                var centerY = rect.height / 2;
+
+                var rotateX = ((y - centerY) / centerY) * -8;
+                var rotateY = ((x - centerX) / centerX) * 8;
+
+                card.style.transform = 'translateY(-10px) perspective(800px) rotateX(' + rotateX + 'deg) rotateY(' + rotateY + 'deg)';
+                card.style.boxShadow = '0 20px 50px var(--shadow-warm), 0 0 40px rgba(212, 168, 67, 0.3)';
+
+                // Move the golden glow to follow the mouse
+                var glowX = (x / rect.width) * 100;
+                var glowY = (y / rect.height) * 100;
+                card.style.setProperty('--glow-x', glowX + '%');
+                card.style.setProperty('--glow-y', glowY + '%');
+            });
+
+            card.addEventListener('mouseleave', function() {
+                card.style.transform = '';
+                card.style.boxShadow = '';
+            });
+        });
+    }
+
+    // --- 3. Process Section: Bounce-In + Connected Line Draw + Icon Glow ---
+    var processSteps = document.querySelectorAll('.process-step');
+    var processLineDraw = document.getElementById('processLineDraw');
+    var processSection = document.getElementById('processTimeline');
+
+    // Remove the old fade-up from process steps and prepare bounce
+    processSteps.forEach(function(step) {
+        step.classList.remove('fade-up');
+        step.classList.add('bounce-ready');
+    });
+
+    var processAnimated = false;
+
+    var processObserver = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+            if (entry.isIntersecting && !processAnimated) {
+                processAnimated = true;
+
+                // Bounce in each step with staggered delay
+                processSteps.forEach(function(step, index) {
+                    setTimeout(function() {
+                        step.classList.add('bounce-in');
+
+                        // Add glow to icon after bounce
+                        var icon = step.querySelector('.step-icon');
+                        if (icon) {
+                            setTimeout(function() {
+                                icon.classList.add('glowing');
+                            }, 300);
+                        }
+                    }, index * 300);
+                });
+
+                // Draw the connecting line after first step appears
+                if (processLineDraw) {
+                    setTimeout(function() {
+                        processLineDraw.classList.add('drawn');
+                    }, 200);
+                }
+
+                processObserver.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.2 });
+
+    if (processSection) {
+        processObserver.observe(processSection);
+    }
+
+    // --- 4. Counter Animation (scroll-triggered) ---
+    var masterStats = document.getElementById('masterStats');
+    var counterAnimated = false;
+
+    function animateCounters() {
+        if (counterAnimated) return;
+        counterAnimated = true;
+
+        var counters = document.querySelectorAll('[data-count-to]');
+        counters.forEach(function(el) {
+            var target = parseInt(el.getAttribute('data-count-to'), 10);
+            var prefix = el.getAttribute('data-count-prefix') || '';
+            var suffix = el.getAttribute('data-count-suffix') || '';
+            var duration = 2000;
+            var startTime = null;
+
+            function step(timestamp) {
+                if (!startTime) startTime = timestamp;
+                var progress = Math.min((timestamp - startTime) / duration, 1);
+                // Ease out cubic for organic feel
+                var eased = 1 - Math.pow(1 - progress, 3);
+                var current = Math.round(eased * target);
+                el.textContent = prefix + current + suffix;
+                if (progress < 1) {
+                    requestAnimationFrame(step);
+                }
+            }
+
+            requestAnimationFrame(step);
+        });
+    }
+
+    var counterObserver = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+                animateCounters();
+                counterObserver.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.3 });
+
+    if (masterStats) {
+        counterObserver.observe(masterStats);
+    }
+
+    // --- 6. Timeline Cascade (slide from alternating sides + dot pulse) ---
+    var timelineItems = document.querySelectorAll('.timeline-item');
     timelineItems.forEach(function(item, index) {
-        item.style.transitionDelay = (index * 0.08) + 's';
+        // Remove old fade-up
+        item.classList.remove('fade-up');
+        // Alternate left/right
+        if (index % 2 === 0) {
+            item.classList.add('slide-from-left');
+        } else {
+            item.classList.add('slide-from-right');
+        }
+    });
+
+    var timelineObserver = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+                var item = entry.target;
+                var index = Array.prototype.indexOf.call(timelineItems, item);
+                setTimeout(function() {
+                    item.classList.add('slid-in');
+                    // Pulse the dot
+                    setTimeout(function() {
+                        item.classList.add('dot-pulse');
+                    }, 100);
+                }, index * 120);
+                timelineObserver.unobserve(item);
+            }
+        });
+    }, { rootMargin: '0px 0px -40px 0px', threshold: 0.1 });
+
+    timelineItems.forEach(function(item) {
+        timelineObserver.observe(item);
+    });
+
+    // --- 7. Scroll Progress Bar ---
+    var scrollProgress = document.getElementById('scrollProgress');
+
+    function updateScrollProgress() {
+        var scrollY = window.pageYOffset || document.documentElement.scrollTop;
+        var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        var percent = docHeight > 0 ? (scrollY / docHeight) * 100 : 0;
+        if (scrollProgress) {
+            scrollProgress.style.width = percent + '%';
+        }
+    }
+
+    // --- 8. Image Reveal on Scroll ---
+    var imageRevealWraps = document.querySelectorAll('.image-reveal-wrap');
+
+    var imageRevealObserver = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('revealed');
+                imageRevealObserver.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.15 });
+
+    imageRevealWraps.forEach(function(wrap) {
+        imageRevealObserver.observe(wrap);
     });
 
     // --- Fixed header: solidify on scroll ---
-    const header = document.getElementById('siteHeader');
+    var header = document.getElementById('siteHeader');
     var lastScrollY = 0;
 
     function handleHeaderScroll() {
@@ -2002,12 +2495,30 @@
         lastScrollY = scrollY;
     }
 
-    window.addEventListener('scroll', handleHeaderScroll, { passive: true });
+    // --- Combined scroll handler (throttled via rAF) ---
+    var scrollTicking = false;
+
+    function onScroll() {
+        if (!scrollTicking) {
+            requestAnimationFrame(function() {
+                handleHeaderScroll();
+                handleParallax();
+                updateScrollProgress();
+                scrollTicking = false;
+            });
+            scrollTicking = true;
+        }
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    // Initialize on load
     handleHeaderScroll();
+    handleParallax();
+    updateScrollProgress();
 
     // --- Hamburger menu toggle ---
-    const hamburger = document.getElementById('hamburgerBtn');
-    const mobileNav = document.getElementById('mobileNav');
+    var hamburger = document.getElementById('hamburgerBtn');
+    var mobileNav = document.getElementById('mobileNav');
 
     hamburger.addEventListener('click', function() {
         hamburger.classList.toggle('active');

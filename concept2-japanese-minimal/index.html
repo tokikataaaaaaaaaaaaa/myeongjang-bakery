@@ -56,23 +56,137 @@
             background-size: 256px 256px;
         }
 
+        /* ==================== */
+        /* SCROLL PROGRESS     */
+        /* ==================== */
+        .scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 2px;
+            background: var(--stone);
+            opacity: 0.4;
+            z-index: 10000;
+            transition: none;
+            pointer-events: none;
+        }
+
+        /* ==================== */
+        /* CUSTOM CURSOR TRAIL  */
+        /* ==================== */
+        .cursor-dot {
+            position: fixed;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--beige);
+            opacity: 0;
+            pointer-events: none;
+            z-index: 9998;
+            transition: opacity 0.4s ease;
+            mix-blend-mode: multiply;
+        }
+
+        .cursor-dot.visible {
+            opacity: 0.6;
+        }
+
+        .cursor-trail {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 1px solid var(--sand);
+            opacity: 0;
+            pointer-events: none;
+            z-index: 9997;
+            transition: opacity 0.4s ease;
+        }
+
+        .cursor-trail.visible {
+            opacity: 0.3;
+        }
+
+        /* Hide cursor elements on touch devices */
+        @media (hover: none) and (pointer: coarse) {
+            .cursor-dot,
+            .cursor-trail {
+                display: none !important;
+            }
+        }
+
+        /* ==================== */
+        /* FLOATING ELEMENTS    */
+        /* ==================== */
+        .floating-orb {
+            position: fixed;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0.04;
+            background: var(--stone);
+        }
+
+        .floating-orb--1 {
+            width: 200px;
+            height: 200px;
+            animation: floatOrb1 25s ease-in-out infinite;
+        }
+
+        .floating-orb--2 {
+            width: 140px;
+            height: 140px;
+            animation: floatOrb2 30s ease-in-out infinite;
+        }
+
+        .floating-orb--3 {
+            width: 100px;
+            height: 100px;
+            animation: floatOrb3 20s ease-in-out infinite;
+        }
+
+        @keyframes floatOrb1 {
+            0%, 100% { transform: translate(10vw, 20vh); }
+            25% { transform: translate(70vw, 40vh); }
+            50% { transform: translate(40vw, 70vh); }
+            75% { transform: translate(20vw, 50vh); }
+        }
+
+        @keyframes floatOrb2 {
+            0%, 100% { transform: translate(80vw, 30vh); }
+            25% { transform: translate(30vw, 60vh); }
+            50% { transform: translate(60vw, 80vh); }
+            75% { transform: translate(50vw, 20vh); }
+        }
+
+        @keyframes floatOrb3 {
+            0%, 100% { transform: translate(50vw, 50vh); }
+            33% { transform: translate(20vw, 80vh); }
+            66% { transform: translate(75vw, 25vh); }
+        }
+
         /* Scroll fade elements */
         .fade-in {
             opacity: 0;
-            transition: opacity 1.2s ease;
+            transform: translateY(20px);
+            transition: opacity 1.2s ease, transform 1.2s ease;
         }
 
         .fade-in.visible {
             opacity: 1;
+            transform: translateY(0);
         }
 
         .fade-in-slow {
             opacity: 0;
-            transition: opacity 2s ease;
+            transform: translateY(20px);
+            transition: opacity 2s ease, transform 2s ease;
         }
 
         .fade-in-slow.visible {
             opacity: 1;
+            transform: translateY(0);
         }
 
         /* ==================== */
@@ -232,6 +346,7 @@
             filter: saturate(0.6) brightness(1.02);
             opacity: 0.85;
             margin-bottom: 3.5rem;
+            will-change: transform;
         }
 
         .hero-title {
@@ -318,6 +433,9 @@
             padding-right: 2rem;
         }
 
+        /* ==================== */
+        /* CLIP-PATH REVEAL    */
+        /* ==================== */
         .section-label {
             font-family: 'Shippori Mincho', serif;
             font-weight: 400;
@@ -326,6 +444,12 @@
             text-transform: uppercase;
             color: var(--stone);
             margin-bottom: 2.5rem;
+            clip-path: inset(100% 0 0 0);
+            transition: clip-path 1s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .section-label.revealed {
+            clip-path: inset(0 0 0 0);
         }
 
         .about-name {
@@ -381,6 +505,7 @@
             justify-content: center;
             align-items: center;
             min-height: 300px;
+            will-change: transform;
         }
 
         .about-portrait {
@@ -390,6 +515,13 @@
             border-radius: 62% 38% 46% 54% / 60% 44% 56% 40%;
             filter: saturate(0.65) brightness(1.0) contrast(0.95);
             opacity: 0.9;
+            transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94), filter 0.8s ease;
+            will-change: transform;
+        }
+
+        .about-portrait:hover {
+            transform: scale(1.04);
+            filter: saturate(0.85) brightness(1.02) contrast(0.95);
         }
 
         /* ==================== */
@@ -445,6 +577,18 @@
             transform: translateX(-2px);
         }
 
+        /* Timeline cascade from left */
+        .timeline-item.cascade-ready {
+            opacity: 0;
+            transform: translateX(-30px);
+            transition: opacity 0.9s ease, transform 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .timeline-item.cascade-visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
         .timeline-year {
             font-family: 'Shippori Mincho', serif;
             font-weight: 400;
@@ -492,6 +636,27 @@
             gap: 1rem;
         }
 
+        .menu-item-image-wrap {
+            position: relative;
+            display: inline-block;
+            border-radius: 52% 48% 45% 55% / 48% 54% 46% 52%;
+            overflow: hidden;
+        }
+
+        .menu-item-image-wrap::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            background: rgba(180, 140, 80, 0);
+            transition: background 0.8s ease;
+            pointer-events: none;
+        }
+
+        .menu-item-image-wrap:hover::after {
+            background: rgba(180, 140, 80, 0.08);
+        }
+
         .menu-item-image {
             width: 120px;
             height: 120px;
@@ -499,11 +664,13 @@
             border-radius: 52% 48% 45% 55% / 48% 54% 46% 52%;
             filter: saturate(0.7) brightness(1.02);
             opacity: 0.9;
-            transition: opacity 0.5s ease;
+            transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            display: block;
         }
 
-        .menu-item-image:hover {
+        .menu-item-image-wrap:hover .menu-item-image {
             opacity: 1;
+            transform: scale(1.08) rotate(2deg);
         }
 
         .menu-item-name {
@@ -514,12 +681,33 @@
             letter-spacing: 0.03em;
         }
 
+        /* Menu item stagger-fade */
+        .menu-item.stagger-ready {
+            opacity: 0;
+            transform: translateY(15px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .menu-item.stagger-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Price reveal on hover */
         .menu-item-price {
             font-family: 'Shippori Mincho', serif;
             font-weight: 400;
             font-size: 0.85rem;
             color: var(--stone);
             letter-spacing: 0.05em;
+            opacity: 0;
+            transform: translateX(10px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .menu-item:hover .menu-item-price {
+            opacity: 1;
+            transform: translateX(0);
         }
 
         /* ==================== */
@@ -544,6 +732,16 @@
             color: var(--charcoal);
             line-height: 2.2;
             letter-spacing: 0.05em;
+        }
+
+        .philosophy-quote .word {
+            opacity: 0;
+            transition: opacity 0.6s ease;
+            display: inline;
+        }
+
+        .philosophy-quote .word.word-visible {
+            opacity: 1;
         }
 
         .philosophy-attribution {
@@ -828,6 +1026,22 @@
                 flex-direction: column;
                 align-items: flex-start;
             }
+
+            /* Mobile: hide cursor elements, floating orbs */
+            .cursor-dot,
+            .cursor-trail {
+                display: none !important;
+            }
+
+            .floating-orb {
+                opacity: 0.02;
+            }
+
+            /* Mobile: always show prices */
+            .menu-item-price {
+                opacity: 1;
+                transform: translateX(0);
+            }
         }
 
         @media (max-width: 480px) {
@@ -878,6 +1092,18 @@
     </style>
 </head>
 <body>
+
+    <!-- Scroll Progress Indicator -->
+    <div class="scroll-progress" id="scroll-progress"></div>
+
+    <!-- Custom Cursor Trail (desktop only) -->
+    <div class="cursor-dot" id="cursor-dot"></div>
+    <div class="cursor-trail" id="cursor-trail"></div>
+
+    <!-- Floating Orbs -->
+    <div class="floating-orb floating-orb--1"></div>
+    <div class="floating-orb floating-orb--2"></div>
+    <div class="floating-orb floating-orb--3"></div>
 
     <!-- Fixed Header -->
     <header class="site-header" id="site-header">
@@ -997,62 +1223,74 @@
         <p class="section-label fade-in">시그니처</p>
         <ul class="menu-list">
             <li class="menu-item fade-in">
-                <img
-                    src="https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=400&h=300&fit=crop&q=80"
-                    alt="Croissant"
-                    class="menu-item-image"
-                    loading="lazy"
-                >
+                <div class="menu-item-image-wrap">
+                    <img
+                        src="https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=400&h=300&fit=crop&q=80"
+                        alt="Croissant"
+                        class="menu-item-image"
+                        loading="lazy"
+                    >
+                </div>
                 <span class="menu-item-name">크루아상 클래식</span>
                 <span class="menu-item-price">&#8361;5,500</span>
             </li>
             <li class="menu-item fade-in">
-                <img
-                    src="https://images.unsplash.com/photo-1568471173242-461f0a730452?w=400&h=300&fit=crop&q=80"
-                    alt="Baguette"
-                    class="menu-item-image"
-                    loading="lazy"
-                >
+                <div class="menu-item-image-wrap">
+                    <img
+                        src="https://images.unsplash.com/photo-1568471173242-461f0a730452?w=400&h=300&fit=crop&q=80"
+                        alt="Baguette"
+                        class="menu-item-image"
+                        loading="lazy"
+                    >
+                </div>
                 <span class="menu-item-name">바게트 트라디시옹</span>
                 <span class="menu-item-price">&#8361;7,000</span>
             </li>
             <li class="menu-item fade-in">
-                <img
-                    src="https://images.unsplash.com/photo-1608198093002-ad4e005484ec?w=400&h=300&fit=crop&q=80"
-                    alt="Brioche"
-                    class="menu-item-image"
-                    loading="lazy"
-                >
+                <div class="menu-item-image-wrap">
+                    <img
+                        src="https://images.unsplash.com/photo-1608198093002-ad4e005484ec?w=400&h=300&fit=crop&q=80"
+                        alt="Brioche"
+                        class="menu-item-image"
+                        loading="lazy"
+                    >
+                </div>
                 <span class="menu-item-name">브리오슈 도레</span>
                 <span class="menu-item-price">&#8361;6,500</span>
             </li>
             <li class="menu-item fade-in">
-                <img
-                    src="https://images.unsplash.com/photo-1586444248902-2f64eddc13df?w=400&h=300&fit=crop&q=80"
-                    alt="Campagne"
-                    class="menu-item-image"
-                    loading="lazy"
-                >
+                <div class="menu-item-image-wrap">
+                    <img
+                        src="https://images.unsplash.com/photo-1586444248902-2f64eddc13df?w=400&h=300&fit=crop&q=80"
+                        alt="Campagne"
+                        class="menu-item-image"
+                        loading="lazy"
+                    >
+                </div>
                 <span class="menu-item-name">깜빠뉴</span>
                 <span class="menu-item-price">&#8361;9,000</span>
             </li>
             <li class="menu-item fade-in">
-                <img
-                    src="https://images.unsplash.com/photo-1509440159596-0249088772ff?w=400&h=300&fit=crop&q=80"
-                    alt="Rye sourdough"
-                    class="menu-item-image"
-                    loading="lazy"
-                >
+                <div class="menu-item-image-wrap">
+                    <img
+                        src="https://images.unsplash.com/photo-1509440159596-0249088772ff?w=400&h=300&fit=crop&q=80"
+                        alt="Rye sourdough"
+                        class="menu-item-image"
+                        loading="lazy"
+                    >
+                </div>
                 <span class="menu-item-name">호밀 사워도우</span>
                 <span class="menu-item-price">&#8361;8,500</span>
             </li>
             <li class="menu-item fade-in">
-                <img
-                    src="https://images.unsplash.com/photo-1549931319-a545dcf3bc73?w=400&h=300&fit=crop&q=80"
-                    alt="Master baker's milk bread"
-                    class="menu-item-image"
-                    loading="lazy"
-                >
+                <div class="menu-item-image-wrap">
+                    <img
+                        src="https://images.unsplash.com/photo-1549931319-a545dcf3bc73?w=400&h=300&fit=crop&q=80"
+                        alt="Master baker's milk bread"
+                        class="menu-item-image"
+                        loading="lazy"
+                    >
+                </div>
                 <span class="menu-item-name">명장 식빵</span>
                 <span class="menu-item-price">&#8361;12,000</span>
             </li>
@@ -1128,9 +1366,10 @@
     </footer>
 
     <script>
-        // Header scroll effect
+        // Header scroll effect + Scroll Progress Indicator
         (function () {
             var header = document.getElementById('site-header');
+            var scrollProgress = document.getElementById('scroll-progress');
             var lastScroll = 0;
 
             window.addEventListener('scroll', function () {
@@ -1141,6 +1380,11 @@
                     header.classList.remove('scrolled');
                 }
                 lastScroll = scrollY;
+
+                // Scroll progress bar
+                var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+                var progress = docHeight > 0 ? (scrollY / docHeight) * 100 : 0;
+                scrollProgress.style.width = progress + '%';
             }, { passive: true });
         })();
 
@@ -1174,7 +1418,223 @@
             });
         })();
 
-        // Scroll-based fade-in observer
+        // Parallax effect for hero image and baker portrait area
+        (function () {
+            var heroImage = document.querySelector('.hero-image');
+            var portraitWrap = document.querySelector('.about-decoration');
+            var ticking = false;
+
+            window.addEventListener('scroll', function () {
+                if (!ticking) {
+                    requestAnimationFrame(function () {
+                        var scrollY = window.pageYOffset;
+
+                        // Hero image parallax: moves at 30% scroll speed
+                        if (heroImage) {
+                            heroImage.style.transform = 'translateY(' + (scrollY * 0.3) + 'px)';
+                        }
+
+                        // Baker portrait area parallax: subtle, 15% scroll speed
+                        // Applied to parent so hover transform on img is not overridden
+                        if (portraitWrap) {
+                            var rect = portraitWrap.getBoundingClientRect();
+                            var center = rect.top + rect.height / 2;
+                            var viewCenter = window.innerHeight / 2;
+                            var offset = (center - viewCenter) * 0.15;
+                            portraitWrap.style.transform = 'translateY(' + offset + 'px)';
+                        }
+
+                        ticking = false;
+                    });
+                    ticking = true;
+                }
+            }, { passive: true });
+        })();
+
+        // Custom cursor trail (desktop only)
+        (function () {
+            var isTouchDevice = ('ontouchstart' in window) ||
+                (navigator.maxTouchPoints > 0) ||
+                (window.matchMedia && window.matchMedia('(hover: none)').matches);
+
+            if (isTouchDevice) return;
+
+            var dot = document.getElementById('cursor-dot');
+            var trail = document.getElementById('cursor-trail');
+            var mouseX = 0, mouseY = 0;
+            var dotX = 0, dotY = 0;
+            var trailX = 0, trailY = 0;
+
+            document.addEventListener('mousemove', function (e) {
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+
+                if (!dot.classList.contains('visible')) {
+                    dot.classList.add('visible');
+                    trail.classList.add('visible');
+                }
+            });
+
+            document.addEventListener('mouseleave', function () {
+                dot.classList.remove('visible');
+                trail.classList.remove('visible');
+            });
+
+            function animateCursor() {
+                // Dot follows closely
+                dotX += (mouseX - dotX) * 0.15;
+                dotY += (mouseY - dotY) * 0.15;
+                dot.style.transform = 'translate(' + (dotX - 4) + 'px, ' + (dotY - 4) + 'px)';
+
+                // Trail follows with more delay
+                trailX += (mouseX - trailX) * 0.08;
+                trailY += (mouseY - trailY) * 0.08;
+                trail.style.transform = 'translate(' + (trailX - 10) + 'px, ' + (trailY - 10) + 'px)';
+
+                requestAnimationFrame(animateCursor);
+            }
+
+            animateCursor();
+        })();
+
+        // Philosophy quote typewriter effect
+        (function () {
+            var quoteEl = document.querySelector('.philosophy-quote');
+            if (!quoteEl) return;
+
+            // Get the original HTML content to preserve <br> tags
+            var originalHTML = quoteEl.innerHTML;
+            // Split by <br> to preserve line breaks
+            var lines = originalHTML.split(/<br\s*\/?>/i);
+            var newHTML = '';
+
+            lines.forEach(function (line, lineIndex) {
+                var words = line.trim().split(/\s+/);
+                words.forEach(function (word) {
+                    if (word.trim()) {
+                        newHTML += '<span class="word">' + word + '</span> ';
+                    }
+                });
+                if (lineIndex < lines.length - 1) {
+                    newHTML += '<br>';
+                }
+            });
+
+            quoteEl.innerHTML = newHTML;
+
+            // Remove fade-in-slow from the quote itself since we handle animation per-word
+            quoteEl.classList.remove('fade-in-slow');
+            quoteEl.style.opacity = '1';
+            quoteEl.style.transform = 'none';
+
+            var wordEls = quoteEl.querySelectorAll('.word');
+            var animated = false;
+
+            if ('IntersectionObserver' in window) {
+                var quoteObserver = new IntersectionObserver(function (entries) {
+                    entries.forEach(function (entry) {
+                        if (entry.isIntersecting && !animated) {
+                            animated = true;
+                            wordEls.forEach(function (word, i) {
+                                setTimeout(function () {
+                                    word.classList.add('word-visible');
+                                }, i * 200);
+                            });
+                            quoteObserver.unobserve(entry.target);
+                        }
+                    });
+                }, { threshold: 0.3 });
+
+                quoteObserver.observe(quoteEl);
+            }
+        })();
+
+        // Section title clip-path reveal
+        (function () {
+            var labels = document.querySelectorAll('.section-label');
+
+            if ('IntersectionObserver' in window) {
+                var labelObserver = new IntersectionObserver(function (entries) {
+                    entries.forEach(function (entry) {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('revealed');
+                            labelObserver.unobserve(entry.target);
+                        }
+                    });
+                }, { threshold: 0.5, rootMargin: '0px 0px -30px 0px' });
+
+                labels.forEach(function (label) {
+                    // Skip hero section labels
+                    if (!label.closest('.hero')) {
+                        labelObserver.observe(label);
+                    }
+                });
+            } else {
+                labels.forEach(function (label) {
+                    label.classList.add('revealed');
+                });
+            }
+        })();
+
+        // Menu item stagger animation
+        (function () {
+            var menuSection = document.querySelector('.menu');
+            var menuItems = document.querySelectorAll('.menu-item');
+            if (!menuSection || menuItems.length === 0) return;
+
+            menuItems.forEach(function (item) {
+                item.classList.add('stagger-ready');
+            });
+
+            if ('IntersectionObserver' in window) {
+                var menuObserver = new IntersectionObserver(function (entries) {
+                    entries.forEach(function (entry) {
+                        if (entry.isIntersecting) {
+                            menuItems.forEach(function (item, i) {
+                                setTimeout(function () {
+                                    item.classList.add('stagger-visible');
+                                }, i * 150);
+                            });
+                            menuObserver.unobserve(entry.target);
+                        }
+                    });
+                }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+                menuObserver.observe(menuSection);
+            }
+        })();
+
+        // Timeline cascade animation
+        (function () {
+            var timelineItems = document.querySelectorAll('.timeline-item');
+            if (timelineItems.length === 0) return;
+
+            timelineItems.forEach(function (item) {
+                item.classList.add('cascade-ready');
+            });
+
+            if ('IntersectionObserver' in window) {
+                var historySection = document.querySelector('.history');
+                var timelineObserver = new IntersectionObserver(function (entries) {
+                    entries.forEach(function (entry) {
+                        if (entry.isIntersecting) {
+                            timelineItems.forEach(function (item, i) {
+                                setTimeout(function () {
+                                    item.classList.add('cascade-visible');
+                                }, i * 120);
+                            });
+                            timelineObserver.unobserve(entry.target);
+                        }
+                    });
+                }, { threshold: 0.1, rootMargin: '0px 0px -30px 0px' });
+
+                if (historySection) {
+                    timelineObserver.observe(historySection);
+                }
+            }
+        })();
+
+        // Scroll-based fade-in observer (enhanced, preserves original behavior)
         document.addEventListener('DOMContentLoaded', function () {
             var fadeElements = document.querySelectorAll('.fade-in, .fade-in-slow');
 
