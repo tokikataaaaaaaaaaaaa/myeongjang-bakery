@@ -25,6 +25,7 @@ const expectedFiles = [
   'index.html',
   'concept2-japanese-minimal/index.html',
   'concept4-warm-artisan/index.html',
+  'concept-c-bricolage/index.html',
 ];
 
 const deletedFiles = [
@@ -77,6 +78,7 @@ const requiredPatterns = [
 const conceptDirs = [
   'concept2-japanese-minimal',
   'concept4-warm-artisan',
+  'concept-c-bricolage',
 ];
 
 for (const dir of conceptDirs) {
@@ -124,6 +126,53 @@ for (const dir of conceptDirs) {
   assert(html.includes('images.unsplash.com'), `${dir}: Unsplash 이미지 포함`);
   assert((html.match(/loading="lazy"/g) || []).length >= 3, `${dir}: lazy loading 적용`);
 }
+
+// --- 7. Concept C Bricolage 고유 검증 ---
+console.log('\n🍞 Concept C Bricolage 고유 검증');
+
+const bricolageHtml = fs.readFileSync(path.join(__dirname, 'concept-c-bricolage', 'index.html'), 'utf-8');
+
+// Bricolage design: Cormorant Garamond + Noto Serif KR fonts
+assert(bricolageHtml.includes('Cormorant Garamond'), 'Bricolage: Cormorant Garamond 폰트 사용');
+assert(bricolageHtml.includes('Noto Serif KR'), 'Bricolage: Noto Serif KR 폰트 사용');
+
+// Bricolage design: cream background color
+assert(bricolageHtml.includes('#faf8f3') || bricolageHtml.includes('faf8f3'), 'Bricolage: 크림 배경색 #faf8f3');
+
+// Fixed header
+assert(bricolageHtml.includes('position: fixed') || bricolageHtml.includes('position:fixed'), 'Bricolage: 고정 헤더');
+
+// Smooth scroll
+assert(bricolageHtml.includes('scroll-behavior: smooth') || bricolageHtml.includes('scroll-behavior:smooth'), 'Bricolage: 부드러운 스크롤');
+
+// Team profiles
+assert(bricolageHtml.includes('이서연'), 'Bricolage: 이서연 프로필 포함');
+assert(bricolageHtml.includes('박준혁'), 'Bricolage: 박준혁 프로필 포함');
+
+// Sections: About, Family, Menu, Information
+assert(bricolageHtml.includes('FAMILY'), 'Bricolage: FAMILY 섹션');
+assert(bricolageHtml.includes('THE BREAD'), 'Bricolage: THE BREAD 섹션');
+assert(bricolageHtml.includes('SINCE 1991'), 'Bricolage: SINCE 1991 표시');
+
+// Footer content
+assert(bricolageHtml.includes('사업자등록번호'), 'Bricolage: 사업자등록번호 포함');
+assert(bricolageHtml.includes('개인정보처리방침'), 'Bricolage: 개인정보처리방침 포함');
+assert(bricolageHtml.includes('recruit@myeongjang.co.kr'), 'Bricolage: 채용 이메일 포함');
+
+// Google Maps iframe
+assert(bricolageHtml.includes('google.com/maps/embed'), 'Bricolage: 구글 맵 iframe 포함');
+
+// IntersectionObserver for scroll animations
+assert(bricolageHtml.includes('IntersectionObserver'), 'Bricolage: IntersectionObserver 사용');
+
+// Hamburger menu for mobile
+assert(bricolageHtml.includes('hamburger') || bricolageHtml.includes('menu-toggle') || bricolageHtml.includes('nav-toggle') || bricolageHtml.includes('mobile-menu'), 'Bricolage: 모바일 햄버거 메뉴');
+
+// 6 bread items with all descriptions
+assert(bricolageHtml.includes('브리오슈'), 'Bricolage: 브리오슈 메뉴 포함');
+assert(bricolageHtml.includes('깜빠뉴') || bricolageHtml.includes('Pain de Campagne'), 'Bricolage: 깜빠뉴 메뉴 포함');
+assert(bricolageHtml.includes('사워도우') || bricolageHtml.includes('Sourdough'), 'Bricolage: 사워도우 메뉴 포함');
+assert(bricolageHtml.includes('식빵') || bricolageHtml.includes('Pullman'), 'Bricolage: 명장 식빵 메뉴 포함');
 
 // --- 결과 출력 ---
 console.log('\n' + '='.repeat(40));

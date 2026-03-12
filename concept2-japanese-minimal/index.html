@@ -76,39 +76,137 @@
         }
 
         /* ==================== */
-        /* BACK BUTTON          */
+        /* FIXED HEADER         */
         /* ==================== */
-        .back-button {
+        .site-header {
             position: fixed;
-            top: 2rem;
-            left: 2rem;
+            top: 0;
+            left: 0;
+            width: 100%;
             z-index: 1000;
+            padding: 0 2rem;
+            height: 60px;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
-            text-decoration: none;
-            color: var(--stone);
-            font-family: 'Noto Serif KR', serif;
-            font-weight: 300;
-            font-size: 0.8rem;
-            letter-spacing: 0.05em;
-            transition: color 0.5s ease;
-            padding: 0.5rem;
+            justify-content: space-between;
+            background: rgba(250, 248, 244, 0);
+            backdrop-filter: blur(0px);
+            -webkit-backdrop-filter: blur(0px);
+            border-bottom: 1px solid transparent;
+            transition: background 0.5s ease, backdrop-filter 0.5s ease, border-bottom-color 0.5s ease;
         }
 
-        .back-button:hover {
+        .site-header.scrolled {
+            background: rgba(250, 248, 244, 0.85);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border-bottom-color: var(--beige);
+        }
+
+        .header-logo {
+            font-family: 'Shippori Mincho', serif;
+            font-weight: 500;
+            font-size: 1.1rem;
+            color: var(--charcoal);
+            text-decoration: none;
+            letter-spacing: 0.1em;
+            transition: opacity 0.3s ease;
+        }
+
+        .header-logo:hover {
+            opacity: 0.7;
+        }
+
+        .header-nav {
+            display: flex;
+            align-items: center;
+            gap: 2.5rem;
+        }
+
+        .header-nav a {
+            font-family: 'Noto Serif KR', serif;
+            font-weight: 300;
+            font-size: 0.75rem;
+            color: var(--stone);
+            text-decoration: none;
+            letter-spacing: 0.15em;
+            transition: color 0.4s ease;
+        }
+
+        .header-nav a:hover {
             color: var(--charcoal);
         }
 
-        .back-button svg {
-            width: 16px;
-            height: 16px;
-            stroke: currentColor;
-            transition: transform 0.4s ease;
+        /* Hamburger menu button */
+        .hamburger {
+            display: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.5rem;
+            flex-direction: column;
+            gap: 5px;
+            align-items: center;
         }
 
-        .back-button:hover svg {
-            transform: translateX(-3px);
+        .hamburger span {
+            display: block;
+            width: 20px;
+            height: 1px;
+            background: var(--charcoal);
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+
+        .hamburger.active span:nth-child(1) {
+            transform: translateY(6px) rotate(45deg);
+        }
+
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger.active span:nth-child(3) {
+            transform: translateY(-6px) rotate(-45deg);
+        }
+
+        /* Mobile navigation overlay */
+        .mobile-nav {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: rgba(250, 248, 244, 0.97);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            z-index: 999;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 2.5rem;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+        }
+
+        .mobile-nav.open {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .mobile-nav a {
+            font-family: 'Noto Serif KR', serif;
+            font-weight: 300;
+            font-size: 1rem;
+            color: var(--charcoal);
+            text-decoration: none;
+            letter-spacing: 0.2em;
+            transition: color 0.3s ease;
+        }
+
+        .mobile-nav a:hover {
+            color: var(--stone);
         }
 
         /* ==================== */
@@ -255,6 +353,27 @@
             opacity: 0.85;
         }
 
+        .about-quote {
+            margin-top: 2.5rem;
+            padding-left: 1.5rem;
+            border-left: 1px solid var(--sand);
+            font-family: 'Shippori Mincho', serif;
+            font-weight: 400;
+            font-size: 0.95rem;
+            color: var(--stone);
+            line-height: 2;
+            font-style: italic;
+        }
+
+        .about-credentials {
+            margin-top: 2rem;
+            font-weight: 300;
+            font-size: 0.8rem;
+            color: var(--stone);
+            letter-spacing: 0.03em;
+            line-height: 2;
+        }
+
         /* Baker portrait area */
         .about-decoration {
             position: relative;
@@ -271,6 +390,77 @@
             border-radius: 62% 38% 46% 54% / 60% 44% 56% 40%;
             filter: saturate(0.65) brightness(1.0) contrast(0.95);
             opacity: 0.9;
+        }
+
+        /* ==================== */
+        /* HISTORY SECTION      */
+        /* ==================== */
+        .history {
+            padding: 8rem 2rem 10rem;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .history .section-label {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 2rem;
+        }
+
+        /* Vertical line */
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 1px;
+            background: var(--sand);
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-bottom: 2.5rem;
+            padding-left: 1.5rem;
+        }
+
+        .timeline-item:last-child {
+            padding-bottom: 0;
+        }
+
+        /* Dot on the vertical line */
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -2rem;
+            top: 0.4rem;
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: var(--sand);
+            transform: translateX(-2px);
+        }
+
+        .timeline-year {
+            font-family: 'Shippori Mincho', serif;
+            font-weight: 400;
+            font-size: 0.75rem;
+            color: var(--stone);
+            letter-spacing: 0.15em;
+            margin-bottom: 0.3rem;
+        }
+
+        .timeline-text {
+            font-family: 'Noto Serif KR', serif;
+            font-weight: 300;
+            font-size: 0.9rem;
+            color: var(--charcoal);
+            line-height: 1.8;
+            opacity: 0.85;
         }
 
         /* ==================== */
@@ -423,17 +613,121 @@
             margin: 0 auto;
         }
 
+        .info-map {
+            margin-top: 3rem;
+        }
+
+        .info-map iframe {
+            border: 0;
+            border-radius: 4px;
+            filter: saturate(0.7) brightness(1.02);
+        }
+
         /* ==================== */
         /* FOOTER               */
         /* ==================== */
         .footer {
-            padding: 4rem 2rem;
-            text-align: center;
+            padding: 4rem 2rem 3rem;
             border-top: 1px solid var(--beige);
+            max-width: 900px;
+            margin: 0 auto;
         }
 
-        .footer-link {
+        .footer-inner {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            padding-bottom: 3rem;
+            border-bottom: 1px solid var(--beige);
+        }
+
+        .footer-section-title {
+            font-family: 'Shippori Mincho', serif;
+            font-weight: 400;
+            font-size: 0.7rem;
+            letter-spacing: 0.2em;
+            color: var(--stone);
+            text-transform: uppercase;
+            margin-bottom: 1.2rem;
+        }
+
+        .footer-info-line {
+            font-weight: 300;
+            font-size: 0.8rem;
+            color: var(--charcoal);
+            line-height: 2;
+            opacity: 0.8;
+        }
+
+        .footer-info-line span {
+            color: var(--stone);
+            margin-right: 0.5rem;
+            font-size: 0.75rem;
+        }
+
+        .footer-sns {
+            display: flex;
+            gap: 1.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .footer-sns a {
+            font-family: 'Shippori Mincho', serif;
+            font-weight: 400;
+            font-size: 0.75rem;
+            color: var(--stone);
+            text-decoration: none;
+            letter-spacing: 0.1em;
+            transition: color 0.4s ease;
+        }
+
+        .footer-sns a:hover {
+            color: var(--charcoal);
+        }
+
+        .footer-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .footer-legal {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        .footer-legal a {
+            font-weight: 300;
+            font-size: 0.7rem;
+            color: var(--stone);
+            text-decoration: none;
+            letter-spacing: 0.05em;
+            transition: color 0.4s ease;
+        }
+
+        .footer-legal a:hover {
+            color: var(--charcoal);
+        }
+
+        .footer-legal-divider {
+            width: 1px;
+            height: 10px;
+            background: var(--sand);
+        }
+
+        .footer-copy {
+            font-size: 0.65rem;
+            color: var(--sand);
+            letter-spacing: 0.1em;
+        }
+
+        .footer-back {
             display: inline-block;
+            margin-top: 2rem;
             color: var(--stone);
             text-decoration: none;
             font-size: 0.75rem;
@@ -442,24 +736,28 @@
             transition: color 0.5s ease;
         }
 
-        .footer-link:hover {
+        .footer-back:hover {
             color: var(--charcoal);
-        }
-
-        .footer-copy {
-            margin-top: 1.5rem;
-            font-size: 0.65rem;
-            color: var(--sand);
-            letter-spacing: 0.1em;
         }
 
         /* ==================== */
         /* RESPONSIVE           */
         /* ==================== */
         @media (max-width: 768px) {
-            .back-button {
-                top: 1.2rem;
-                left: 1.2rem;
+            .site-header {
+                padding: 0 1.2rem;
+            }
+
+            .header-nav {
+                display: none;
+            }
+
+            .hamburger {
+                display: flex;
+            }
+
+            .mobile-nav {
+                display: flex;
             }
 
             .hero {
@@ -485,6 +783,10 @@
             .about-portrait {
                 width: 200px;
                 height: 250px;
+            }
+
+            .history {
+                padding: 5rem 1.5rem 6rem;
             }
 
             .menu {
@@ -515,6 +817,16 @@
 
             .scroll-hint {
                 bottom: 2rem;
+            }
+
+            .footer-inner {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .footer-bottom {
+                flex-direction: column;
+                align-items: flex-start;
             }
         }
 
@@ -550,19 +862,46 @@
                 font-size: 1.1rem;
                 line-height: 2;
             }
+
+            .timeline {
+                padding-left: 1.5rem;
+            }
+
+            .timeline-item {
+                padding-left: 1rem;
+            }
+
+            .timeline-item::before {
+                left: -1.5rem;
+            }
         }
     </style>
 </head>
 <body>
 
-    <!-- Back Button -->
-    <a href="../index.html" class="back-button" aria-label="Back to concepts">
-        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="19" y1="12" x2="5" y2="12"></line>
-            <polyline points="12 19 5 12 12 5"></polyline>
-        </svg>
-        <span>돌아가기</span>
-    </a>
+    <!-- Fixed Header -->
+    <header class="site-header" id="site-header">
+        <a href="#" class="header-logo">명장시대</a>
+        <nav class="header-nav">
+            <a href="#about">About</a>
+            <a href="#menu">Menu</a>
+            <a href="#story">Story</a>
+            <a href="#info">Info</a>
+        </nav>
+        <button class="hamburger" id="hamburger" aria-label="메뉴 열기">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+    </header>
+
+    <!-- Mobile Navigation -->
+    <nav class="mobile-nav" id="mobile-nav">
+        <a href="#about">About</a>
+        <a href="#menu">Menu</a>
+        <a href="#story">Story</a>
+        <a href="#info">Info</a>
+    </nav>
 
     <!-- Hero -->
     <section class="hero">
@@ -583,17 +922,25 @@
     </section>
 
     <!-- About -->
-    <section class="about">
+    <section class="about" id="about">
         <div class="about-text fade-in">
             <p class="section-label">장인</p>
             <h2 class="about-name">김영수 명장</h2>
-            <p class="about-title">대한민국 제과명장 &middot; 35년 경력</p>
+            <p class="about-title">대한민국 제과명장 제47호 &middot; 35년 경력</p>
             <p class="about-body">
                 밀가루에 손을 대는 순간, 시간이 멈춥니다.
                 35년이라는 세월은 기술이 아닌 감각을 만들었고,
                 그 감각은 빵 하나하나에 고요히 스며들어 있습니다.
                 화려하지 않되, 오래 기억에 남는 맛.
                 그것이 명장의 빵입니다.
+            </p>
+            <blockquote class="about-quote">
+                "빵은 시간의 예술입니다. 밀가루와 물, 그리고 기다림이 만들어내는 겸허한 맛."
+            </blockquote>
+            <p class="about-credentials">
+                프랑스 르 코르동 블루 수료<br>
+                대한민국 제과명장 제47호 선정<br>
+                국무총리 표창 수상
             </p>
         </div>
         <div class="about-decoration fade-in-slow">
@@ -606,8 +953,47 @@
         </div>
     </section>
 
+    <!-- History / Awards -->
+    <section class="history" id="history">
+        <p class="section-label fade-in">연혁</p>
+        <div class="timeline">
+            <div class="timeline-item fade-in">
+                <p class="timeline-year">1991</p>
+                <p class="timeline-text">김영수 명장, 첫 빵집 개업</p>
+            </div>
+            <div class="timeline-item fade-in">
+                <p class="timeline-year">1998</p>
+                <p class="timeline-text">프랑스 르 코르동 블루 수료</p>
+            </div>
+            <div class="timeline-item fade-in">
+                <p class="timeline-year">2005</p>
+                <p class="timeline-text">대한민국 제과명장 제47호 선정</p>
+            </div>
+            <div class="timeline-item fade-in">
+                <p class="timeline-year">2010</p>
+                <p class="timeline-text">국무총리 표창 수상</p>
+            </div>
+            <div class="timeline-item fade-in">
+                <p class="timeline-year">2015</p>
+                <p class="timeline-text">강남 본점 이전 개업</p>
+            </div>
+            <div class="timeline-item fade-in">
+                <p class="timeline-year">2018</p>
+                <p class="timeline-text">HACCP 인증 획득</p>
+            </div>
+            <div class="timeline-item fade-in">
+                <p class="timeline-year">2022</p>
+                <p class="timeline-text">대한민국 빵 명인대회 심사위원 위촉</p>
+            </div>
+            <div class="timeline-item fade-in">
+                <p class="timeline-year">2024</p>
+                <p class="timeline-text">창업 33주년, 시그니처 라인 런칭</p>
+            </div>
+        </div>
+    </section>
+
     <!-- Menu -->
-    <section class="menu">
+    <section class="menu" id="menu">
         <p class="section-label fade-in">시그니처</p>
         <ul class="menu-list">
             <li class="menu-item fade-in">
@@ -674,7 +1060,7 @@
     </section>
 
     <!-- Philosophy -->
-    <section class="philosophy">
+    <section class="philosophy" id="story">
         <p class="section-label fade-in">철학</p>
         <blockquote class="philosophy-quote fade-in-slow">
             하루의 시작은<br>
@@ -686,12 +1072,12 @@
     </section>
 
     <!-- Store Info -->
-    <section class="store-info">
+    <section class="store-info" id="info">
         <p class="section-label fade-in">안내</p>
         <div class="info-grid">
             <div class="info-item fade-in">
                 <span class="info-label">Address</span>
-                <span class="info-value">서울시 강남구 도산대로 123</span>
+                <span class="info-value">서울시 강남구 도산대로 123, 1층</span>
             </div>
             <div class="info-divider fade-in"></div>
             <div class="info-item fade-in">
@@ -704,15 +1090,90 @@
                 <span class="info-value">02-1234-5678</span>
             </div>
         </div>
+        <div class="info-map fade-in">
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3165.123!2d127.035!3d37.520!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMzfCsDMxJzEyLjAiTiAxMjfCsDAyJzA2LjAiRQ!5e0!3m2!1sko!2skr" width="100%" height="300" style="border:0; border-radius: 4px;" allowfullscreen="" loading="lazy"></iframe>
+        </div>
     </section>
 
     <!-- Footer -->
     <footer class="footer">
-        <a href="../index.html" class="footer-link">모든 컨셉 보기</a>
-        <p class="footer-copy">&copy; 2026 명장시대</p>
+        <div class="footer-inner">
+            <div>
+                <p class="footer-section-title">사업자 정보</p>
+                <p class="footer-info-line"><span>상호</span>(주)명장시대</p>
+                <p class="footer-info-line"><span>대표</span>김영수</p>
+                <p class="footer-info-line"><span>사업자등록번호</span>123-45-67890</p>
+                <p class="footer-info-line"><span>주소</span>서울시 강남구 도산대로 123, 1층</p>
+                <p class="footer-info-line"><span>전화</span>02-1234-5678</p>
+                <p class="footer-info-line"><span>이메일</span>info@myeongjang.co.kr</p>
+            </div>
+            <div>
+                <p class="footer-section-title">SNS</p>
+                <div class="footer-sns">
+                    <a href="#">Instagram</a>
+                    <a href="#">Naver Blog</a>
+                    <a href="#">YouTube</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="footer-legal">
+                <a href="#">개인정보처리방침</a>
+                <div class="footer-legal-divider"></div>
+                <a href="#">이용약관</a>
+            </div>
+            <p class="footer-copy">&copy; 2026 명장시대. All rights reserved.</p>
+        </div>
+        <a href="../index.html" class="footer-back">모든 컨셉 보기</a>
     </footer>
 
     <script>
+        // Header scroll effect
+        (function () {
+            var header = document.getElementById('site-header');
+            var lastScroll = 0;
+
+            window.addEventListener('scroll', function () {
+                var scrollY = window.pageYOffset || document.documentElement.scrollTop;
+                if (scrollY > 50) {
+                    header.classList.add('scrolled');
+                } else {
+                    header.classList.remove('scrolled');
+                }
+                lastScroll = scrollY;
+            }, { passive: true });
+        })();
+
+        // Mobile hamburger menu
+        (function () {
+            var hamburger = document.getElementById('hamburger');
+            var mobileNav = document.getElementById('mobile-nav');
+
+            hamburger.addEventListener('click', function () {
+                hamburger.classList.toggle('active');
+                mobileNav.classList.toggle('open');
+
+                if (mobileNav.classList.contains('open')) {
+                    document.body.style.overflow = 'hidden';
+                    hamburger.setAttribute('aria-label', '메뉴 닫기');
+                } else {
+                    document.body.style.overflow = '';
+                    hamburger.setAttribute('aria-label', '메뉴 열기');
+                }
+            });
+
+            // Close mobile nav when a link is clicked
+            var mobileLinks = mobileNav.querySelectorAll('a');
+            mobileLinks.forEach(function (link) {
+                link.addEventListener('click', function () {
+                    hamburger.classList.remove('active');
+                    mobileNav.classList.remove('open');
+                    document.body.style.overflow = '';
+                    hamburger.setAttribute('aria-label', '메뉴 열기');
+                });
+            });
+        })();
+
         // Scroll-based fade-in observer
         document.addEventListener('DOMContentLoaded', function () {
             var fadeElements = document.querySelectorAll('.fade-in, .fade-in-slow');
